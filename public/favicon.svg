@@ -1,0 +1,14 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M60 102C45 90 18 70 18 46C18 30 30 18 45 18C52 18 58 21.5 60 27C62 21.5 68 18 75 18C90 18 102 30 102 46C102 70 75 90 60 102Z"
+        fill="#bd3a26"
+    />
+    <g transform="translate(60 10)">
+        <circle cx="0" cy="-6" r="6" fill="#e8923c" />
+        <circle cx="8" cy="-1" r="6" fill="#e8923c" />
+        <circle cx="5" cy="8" r="6" fill="#e8923c" />
+        <circle cx="-5" cy="8" r="6" fill="#e8923c" />
+        <circle cx="-8" cy="-1" r="6" fill="#e8923c" />
+        <circle cx="0" cy="1" r="5" fill="#b35f16" />
+    </g>
+</svg>
