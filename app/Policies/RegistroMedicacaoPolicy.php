@@ -36,18 +36,18 @@ class RegistroMedicacaoPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('admin', 'diretor', 'medico', 'enfermeiro', 'tecnico');
+        return $user->temCargo('admin', 'medico', 'enfermeiro', 'chefe_enfermagem', 'tecnico');
     }
 
     public function update(User $user, RegistroMedicacao $registroMedicacao): bool
     {
-        return $user->temCargo('admin', 'diretor', 'medico', 'enfermeiro', 'tecnico')
+        return $user->temCargo('admin', 'medico', 'enfermeiro', 'chefe_enfermagem', 'tecnico')
             && $this->registroMedicacaoService->diaEstaAberto($registroMedicacao->data);
     }
 
     public function delete(User $user, RegistroMedicacao $registroMedicacao): bool
     {
-        return $user->temCargo('admin', 'diretor')
+        return $user->temCargo('admin', 'chefe_enfermagem')
             && $this->registroMedicacaoService->diaEstaAberto($registroMedicacao->data);
     }
 }

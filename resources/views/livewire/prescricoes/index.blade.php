@@ -30,7 +30,7 @@
                     </div>
                     @can('create', App\Models\Prescricao::class)
                         <a href="{{ route('prescricoes.create') }}" wire:navigate>
-                            <x-primary-button>Nova Prescricao</x-primary-button>
+                            <x-primary-button>Nova Prescrição</x-primary-button>
                         </a>
                     @endcan
                 </div>

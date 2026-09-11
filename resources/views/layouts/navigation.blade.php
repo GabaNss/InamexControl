@@ -28,6 +28,16 @@
                             {{ __('Medicamentos') }}
                         </x-nav-link>
                     @endcan
+                    @can('viewAny', App\Models\Prescricao::class)
+                        <x-nav-link :href="route('prescricoes.index')" :active="request()->routeIs('prescricoes.*')" wire:navigate>
+                            {{ __('Prescrições') }}
+                        </x-nav-link>
+                    @endcan
+                    @can('viewAny', App\Models\RegistroMedicacao::class)
+                        <x-nav-link :href="route('registros.index')" :active="request()->routeIs('registros.*')" wire:navigate>
+                            {{ __('Registros') }}
+                        </x-nav-link>
+                    @endcan
                     @can('gerar-relatorios')
                         <x-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.*')" wire:navigate>
                             {{ __('Exportação') }}
@@ -36,6 +46,11 @@
                     @can('viewAny', App\Models\User::class)
                         <x-nav-link :href="route('usuarios.index')" :active="request()->routeIs('usuarios.*')" wire:navigate>
                             {{ __('Usuarios') }}
+                        </x-nav-link>
+                    @endcan
+                    @can('ver-auditoria')
+                        <x-nav-link :href="route('auditoria.index')" :active="request()->routeIs('auditoria.*')" wire:navigate>
+                            {{ __('Auditoria') }}
                         </x-nav-link>
                     @endcan
                     @can('gerenciar-backup')
@@ -108,6 +123,16 @@
                     {{ __('Medicamentos') }}
                 </x-responsive-nav-link>
             @endcan
+            @can('viewAny', App\Models\Prescricao::class)
+                <x-responsive-nav-link :href="route('prescricoes.index')" :active="request()->routeIs('prescricoes.*')" wire:navigate>
+                    {{ __('Prescrições') }}
+                </x-responsive-nav-link>
+            @endcan
+            @can('viewAny', App\Models\RegistroMedicacao::class)
+                <x-responsive-nav-link :href="route('registros.index')" :active="request()->routeIs('registros.*')" wire:navigate>
+                    {{ __('Registros') }}
+                </x-responsive-nav-link>
+            @endcan
             @can('gerar-relatorios')
                 <x-responsive-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.*')" wire:navigate>
                     {{ __('Exportação') }}
@@ -116,6 +141,11 @@
             @can('viewAny', App\Models\User::class)
                 <x-responsive-nav-link :href="route('usuarios.index')" :active="request()->routeIs('usuarios.*')" wire:navigate>
                     {{ __('Usuarios') }}
+                </x-responsive-nav-link>
+            @endcan
+            @can('ver-auditoria')
+                <x-responsive-nav-link :href="route('auditoria.index')" :active="request()->routeIs('auditoria.*')" wire:navigate>
+                    {{ __('Auditoria') }}
                 </x-responsive-nav-link>
             @endcan
             @can('gerenciar-backup')

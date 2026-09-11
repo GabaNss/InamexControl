@@ -27,6 +27,6 @@ class DiarioStatusPolicy
 
     public function update(User $user, DiarioStatus $diarioStatus): bool
     {
-        return $user->temCargo('admin', 'diretor');
+        return $user->temCargo('admin');
     }
 }

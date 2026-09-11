@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
-    <title>Relatorio de Registros de Medicacao</title>
+    <title>Relatório de Registros de Medicação</title>
     <style>
         body { font-family: sans-serif; font-size: 12px; color: #111; }
         h1 { font-size: 16px; margin-bottom: 0; }
@@ -27,8 +27,8 @@
                 <th>Data</th>
                 <th>Turno</th>
                 <th>Administrado</th>
-                <th>Observacao</th>
-                <th>Responsavel</th>
+                <th>Observação</th>
+                <th>Responsável</th>
             </tr>
         </thead>
         <tbody>

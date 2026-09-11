@@ -1,6 +1,6 @@
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Registros de Medicacao') }}
+        {{ __('Registros de Medicação') }}
     </h2>
 </x-slot>
 
@@ -38,8 +38,8 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Medicamento</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dose</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Administrado</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Observacao</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Responsavel</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Observação</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Responsável</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">

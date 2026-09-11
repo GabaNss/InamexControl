@@ -8,9 +8,8 @@ use App\Models\User;
 /**
  * Regras de acesso a prescricoes medicas.
  *
- * Apenas medico, diretor e admin podem criar/editar/inativar prescricoes
- * (ato medico). Enfermeiro e tecnico tem apenas leitura, pois precisam ver a
- * prescricao para preencher o RegistroMedicacao.
+ * Apenas medico e admin podem criar/editar/inativar prescricoes (ato medico).
+ * Diretor, enfermeiro e tecnico tem apenas leitura.
  */
 class PrescricaoPolicy
 {
@@ -26,16 +25,16 @@ class PrescricaoPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('admin', 'diretor', 'medico');
+        return $user->temCargo('admin', 'medico');
     }
 
     public function update(User $user, Prescricao $prescricao): bool
     {
-        return $user->temCargo('admin', 'diretor', 'medico');
+        return $user->temCargo('admin', 'medico');
     }
 
     public function delete(User $user, Prescricao $prescricao): bool
     {
-        return $user->temCargo('admin', 'diretor', 'medico');
+        return $user->temCargo('admin', 'medico');
     }
 }

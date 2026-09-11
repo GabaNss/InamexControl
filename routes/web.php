@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Auditoria;
 use App\Livewire\Backup;
 use App\Livewire\Medicamentos;
 use App\Livewire\Pacientes;
@@ -129,6 +130,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/usuarios', Usuarios\Index::class)->name('usuarios.index');
     Route::get('/usuarios/create', Usuarios\Form::class)->name('usuarios.create');
     Route::get('/usuarios/{user}/edit', Usuarios\Form::class)->name('usuarios.edit');
+
+    // Trilha de auditoria: restrito a admin e diretor (ver Gate 'ver-auditoria').
+    Route::get('/auditoria', Auditoria\Index::class)->name('auditoria.index');
 
     // Backup manual do banco inteiro: restrito a admin (ver Gate 'gerenciar-backup').
     Route::get('/backup', Backup\Index::class)->name('backup.index');

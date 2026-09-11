@@ -8,8 +8,8 @@ use App\Models\User;
 /**
  * Regras de acesso ao catalogo de medicamentos.
  *
- * Todos os cargos clinicos podem visualizar; apenas admin, diretor e medico
- * podem criar/editar/excluir itens do catalogo.
+ * Todos os cargos clinicos podem visualizar; apenas admin e medico podem
+ * criar/editar/excluir — diretor tem somente leitura.
  */
 class MedicamentoPolicy
 {
@@ -25,16 +25,16 @@ class MedicamentoPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('admin', 'diretor', 'medico');
+        return $user->temCargo('admin', 'medico', 'chefe_enfermagem');
     }
 
     public function update(User $user, Medicamento $medicamento): bool
     {
-        return $user->temCargo('admin', 'diretor', 'medico');
+        return $user->temCargo('admin', 'medico', 'chefe_enfermagem');
     }
 
     public function delete(User $user, Medicamento $medicamento): bool
     {
-        return $user->temCargo('admin', 'diretor', 'medico');
+        return $user->temCargo('admin', 'medico', 'chefe_enfermagem');
     }
 }

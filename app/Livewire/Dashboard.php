@@ -14,6 +14,13 @@ class Dashboard extends Component
 {
     public function render()
     {
+        $usuario = auth()->user();
+
+        // Usuário pendente ainda não tem cargo atribuído — mostra tela de espera.
+        if (!$usuario->temCargoAtribuido()) {
+            return view('livewire.dashboard-pendente', ['usuario' => $usuario]);
+        }
+
         $hoje = Carbon::today()->toDateString();
 
         // --- Status do dia ---
@@ -76,8 +83,6 @@ class Dashboard extends Component
             ->orderByDesc('created_at')
             ->limit(10)
             ->get();
-
-        $usuario = auth()->user();
 
         return view('livewire.dashboard', compact(
             'usuario',

@@ -19,16 +19,16 @@ class ProntuarioHistoricoPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('chefe_enfermagem', 'admin', 'diretor');
+        return $user->temCargo('chefe_enfermagem', 'admin');
     }
 
     public function update(User $user, ProntuarioHistorico $prontuario): bool
     {
-        return $user->temCargo('chefe_enfermagem', 'admin', 'diretor');
+        return $user->temCargo('chefe_enfermagem', 'admin');
     }
 
     public function delete(User $user, ProntuarioHistorico $prontuario): bool
     {
-        return $user->temCargo('admin', 'diretor');
+        return false;
     }
 }

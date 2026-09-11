@@ -51,11 +51,14 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('gerar-relatorios', fn (User $user) => $user->temCargoAtribuido());
 
         // Quem pode encerrar/reabrir o diario manualmente (fora do agendamento
-        // automatico de meia-noite).
-        Gate::define('encerrar-diario-manual', fn (User $user) => $user->temCargo('admin', 'diretor'));
+        // automatico de meia-noite). Diretor tem apenas leitura do sistema.
+        Gate::define('encerrar-diario-manual', fn (User $user) => $user->temCargo('admin'));
 
         // Quem pode gerenciar usuarios e cargos do sistema.
-        Gate::define('gerenciar-usuarios', fn (User $user) => $user->temCargo('admin'));
+        Gate::define('gerenciar-usuarios', fn (User $user) => $user->temCargo('admin', 'diretor'));
+
+        // Quem pode visualizar a trilha de auditoria.
+        Gate::define('ver-auditoria', fn (User $user) => $user->temCargo('admin', 'diretor', 'chefe_enfermagem'));
 
         // Quem pode gerar um dump manual do banco inteiro (todos os dados de
         // todas as internas, nao um recorte por paciente como 'gerar-relatorios').

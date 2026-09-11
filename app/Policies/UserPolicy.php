@@ -8,8 +8,8 @@ use App\Models\User;
  * Regras de acesso a gestao de usuarios do sistema (criar conta, definir
  * cargo, ativar/desativar acesso).
  *
- * Apenas admin pode gerenciar usuarios. Diretor pode visualizar a lista, mas
- * nao alterar/criar/excluir.
+ * Admin e diretor podem gerenciar usuarios. Diretor nao pode
+ * desativar a propria conta nem a conta de um admin.
  */
 class UserPolicy
 {
@@ -25,19 +25,33 @@ class UserPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('admin');
+        return $user->temCargo('admin', 'diretor');
     }
 
     public function update(User $user, User $alvo): bool
     {
-        return $user->temCargo('admin');
+        // Diretor nao pode editar contas de admin
+        if ($user->temCargo('diretor') && $alvo->temCargo('admin')) {
+            return false;
+        }
+
+        return $user->temCargo('admin', 'diretor');
     }
 
     /**
-     * Admin nao pode desativar a propria conta (evita ficar sem acesso ao sistema).
+     * Nenhum usuario pode desativar a propria conta.
+     * Diretor nao pode desativar contas de admin.
      */
     public function delete(User $user, User $alvo): bool
     {
-        return $user->temCargo('admin') && $user->isNot($alvo);
+        if ($user->is($alvo)) {
+            return false;
+        }
+
+        if ($user->temCargo('diretor') && $alvo->temCargo('admin')) {
+            return false;
+        }
+
+        return $user->temCargo('admin', 'diretor');
     }
 }

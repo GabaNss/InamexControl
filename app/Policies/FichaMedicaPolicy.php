@@ -19,16 +19,16 @@ class FichaMedicaPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('medico', 'chefe_enfermagem', 'admin', 'diretor');
+        return $user->temCargo('medico', 'chefe_enfermagem', 'admin');
     }
 
     public function update(User $user, FichaMedica $fichaMedica): bool
     {
-        return $user->temCargo('medico', 'chefe_enfermagem', 'admin', 'diretor');
+        return $user->temCargo('medico', 'chefe_enfermagem', 'admin');
     }
 
     public function delete(User $user, FichaMedica $fichaMedica): bool
     {
-        return $user->temCargo('admin', 'diretor');
+        return $user->temCargo('admin', 'chefe_enfermagem');
     }
 }

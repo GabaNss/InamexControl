@@ -1,6 +1,6 @@
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $prescricao ? __('Editar Prescricao') : __('Nova Prescricao') }}
+        {{ $prescricao ? __('Editar Prescrição') : __('Nova Prescrição') }}
     </h2>
 </x-slot>
 
@@ -48,7 +48,7 @@
 
                     <label class="flex items-center gap-2">
                         <input type="checkbox" wire:model="ativa" class="rounded border-gray-300">
-                        <span class="text-sm text-gray-700">Prescricao ativa</span>
+                        <span class="text-sm text-gray-700">Prescrição ativa</span>
                     </label>
 
                     <div class="flex items-center gap-4">

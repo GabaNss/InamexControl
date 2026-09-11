@@ -16,7 +16,7 @@
                     </div>
 
                     <div>
-                        <x-input-label for="prontuario" value="Prontuario" />
+                        <x-input-label for="prontuario" value="Prontuário" />
                         <x-text-input id="prontuario" type="text" class="mt-1 block w-full" wire:model.blur="prontuario" required />
                         <x-input-error :messages="$errors->get('prontuario')" class="mt-2" />
                     </div>
