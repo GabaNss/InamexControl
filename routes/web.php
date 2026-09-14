@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Auditoria;
 use App\Livewire\Backup;
+use App\Livewire\Diario;
 use App\Livewire\Medicamentos;
 use App\Livewire\Pacientes;
 use App\Livewire\Prescricoes;
@@ -70,6 +71,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // enfermeiro/tecnico (e visivel a medico/diretor/admin). Edicao bloqueada
     // quando o dia ja estiver encerrado (ver RegistroMedicacaoPolicy).
     Route::get('/registros', Registros\Index::class)->name('registros.index');
+
+    // Diario de operacoes: encerramento e reabertura do dia (admin).
+    Route::get('/diario', Diario\Show::class)->name('diario.show');
 
     // Relatorios/exportacoes: acesso restrito via Gate 'gerar-relatorios'.
     Route::get('/relatorios', Relatorios\Index::class)->name('relatorios.index');

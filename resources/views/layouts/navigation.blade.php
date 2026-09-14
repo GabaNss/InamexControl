@@ -38,6 +38,11 @@
                             {{ __('Registros') }}
                         </x-nav-link>
                     @endcan
+                    @can('viewAny', App\Models\DiarioStatus::class)
+                        <x-nav-link :href="route('diario.show')" :active="request()->routeIs('diario.*')" wire:navigate>
+                            {{ __('Diário') }}
+                        </x-nav-link>
+                    @endcan
                     @can('gerar-relatorios')
                         <x-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.*')" wire:navigate>
                             {{ __('Exportação') }}
@@ -131,6 +136,11 @@
             @can('viewAny', App\Models\RegistroMedicacao::class)
                 <x-responsive-nav-link :href="route('registros.index')" :active="request()->routeIs('registros.*')" wire:navigate>
                     {{ __('Registros') }}
+                </x-responsive-nav-link>
+            @endcan
+            @can('viewAny', App\Models\DiarioStatus::class)
+                <x-responsive-nav-link :href="route('diario.show')" :active="request()->routeIs('diario.*')" wire:navigate>
+                    {{ __('Diário') }}
                 </x-responsive-nav-link>
             @endcan
             @can('gerar-relatorios')
