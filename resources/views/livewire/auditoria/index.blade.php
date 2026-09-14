@@ -6,18 +6,18 @@
 
 <div>
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
 
             {{-- Filtros --}}
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                <div class="flex flex-wrap items-end gap-4">
+            <div class="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-end gap-3">
                     <div>
                         <x-input-label for="busca" value="Usuário" />
-                        <x-text-input id="busca" type="text" class="mt-1 block w-48" placeholder="Nome do usuário..." wire:model.live.debounce.300ms="busca" />
+                        <x-text-input id="busca" type="text" class="mt-1 block w-full" placeholder="Nome do usuário..." wire:model.live.debounce.300ms="busca" />
                     </div>
                     <div>
                         <x-input-label for="acao" value="Ação" />
-                        <select id="acao" wire:model.live="acao" class="mt-1 block w-56 border-gray-300 rounded-md shadow-sm text-sm focus:ring-brand-500 focus:border-brand-500">
+                        <select id="acao" wire:model.live="acao" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm focus:ring-brand-500 focus:border-brand-500">
                             <option value="">Todas</option>
                             @foreach ($acoes as $a)
                                 <option value="{{ $a }}">{{ $a }}</option>
@@ -26,16 +26,16 @@
                     </div>
                     <div>
                         <x-input-label for="inicio" value="De" />
-                        <x-text-input id="inicio" type="date" class="mt-1 block w-40" wire:model.live="inicio" />
+                        <x-text-input id="inicio" type="date" class="mt-1 block w-full" wire:model.live="inicio" />
                     </div>
                     <div>
                         <x-input-label for="fim" value="Até" />
-                        <x-text-input id="fim" type="date" class="mt-1 block w-40" wire:model.live="fim" />
+                        <x-text-input id="fim" type="date" class="mt-1 block w-full" wire:model.live="fim" />
                     </div>
                     @if ($busca || $acao || $inicio || $fim)
-                        <div class="pb-0.5">
+                        <div class="flex items-end">
                             <button wire:click="$set('busca', ''); $set('acao', ''); $set('inicio', ''); $set('fim', '')"
-                                class="text-sm text-gray-500 hover:text-gray-700 underline">
+                                class="text-sm text-gray-500 hover:text-gray-700 underline pb-0.5">
                                 Limpar filtros
                             </button>
                         </div>
@@ -43,9 +43,49 @@
                 </div>
             </div>
 
-            {{-- Tabela --}}
+            {{-- Tabela / Cards --}}
             <div class="bg-white shadow-sm sm:rounded-lg overflow-hidden">
-                <div class="overflow-x-auto">
+
+                {{-- Mobile: cards --}}
+                <div class="md:hidden divide-y divide-gray-100">
+                    @forelse ($logs as $log)
+                        <div class="p-4 space-y-2">
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="text-xs text-gray-500">{{ $log->created_at->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i:s') }}</span>
+                                <span class="shrink-0 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-50 text-brand-700">
+                                    {{ $log->acao }}
+                                </span>
+                            </div>
+                            <div class="text-sm space-y-0.5">
+                                <div><span class="font-medium text-gray-600">Usuário:</span> {{ $log->usuario?->name ?? 'Sistema' }}</div>
+                                @if ($log->alvo_type)
+                                    <div><span class="font-medium text-gray-600">Alvo:</span> {{ class_basename($log->alvo_type) }} #{{ $log->alvo_id }}</div>
+                                @endif
+                                @if ($log->ip_address)
+                                    <div><span class="font-medium text-gray-600">IP:</span> <span class="text-gray-400 text-xs">{{ $log->ip_address }}</span></div>
+                                @endif
+                            </div>
+                            @if ($log->dados_antes || $log->dados_depois)
+                                <details class="text-xs text-gray-500">
+                                    <summary class="cursor-pointer text-brand-600 hover:underline font-medium">Ver detalhes</summary>
+                                    <div class="mt-2 space-y-1 bg-gray-50 rounded p-2">
+                                        @if ($log->dados_antes)
+                                            <div><span class="font-medium text-red-600">Antes:</span> {{ json_encode($log->dados_antes, JSON_UNESCAPED_UNICODE) }}</div>
+                                        @endif
+                                        @if ($log->dados_depois)
+                                            <div><span class="font-medium text-green-600">Depois:</span> {{ json_encode($log->dados_depois, JSON_UNESCAPED_UNICODE) }}</div>
+                                        @endif
+                                    </div>
+                                </details>
+                            @endif
+                        </div>
+                    @empty
+                        <div class="p-8 text-center text-gray-400 text-sm">Nenhum registro encontrado.</div>
+                    @endforelse
+                </div>
+
+                {{-- Desktop: tabela --}}
+                <div class="hidden md:block overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 text-sm">
                         <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
                             <tr>
