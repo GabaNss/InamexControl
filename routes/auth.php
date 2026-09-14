@@ -11,16 +11,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
-// Qualquer um pode criar conta, mas nasce com cargo 'pendente' (sem nenhuma
-// permissao) — um admin precisa atribuir um cargo de verdade pela tela de
-// usuarios (App\Livewire\Usuarios\Form) antes que algo apareça para esse
-// usuario (ver App\Policies\* e User::temCargoAtribuido()).
+// Sistema fechado: contas sao criadas exclusivamente por um admin na tela de
+// Usuarios (/usuarios/create). O auto-registro publico esta desabilitado.
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-        ->name('register');
-
-    Route::post('register', [RegisteredUserController::class, 'store']);
-
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 

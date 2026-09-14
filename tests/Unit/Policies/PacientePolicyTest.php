@@ -53,17 +53,25 @@ class PacientePolicyTest extends TestCase
         $this->assertFalse($this->policy->delete($usuario, $paciente));
     }
 
-    public function test_admin_e_diretor_podem_criar_editar_excluir(): void
+    public function test_apenas_admin_pode_criar_editar_excluir(): void
     {
         $paciente = Paciente::factory()->create();
+        $admin = User::factory()->create(['cargo' => 'admin']);
 
-        foreach (['admin', 'diretor'] as $cargo) {
-            $usuario = User::factory()->create(['cargo' => $cargo]);
+        $this->assertTrue($this->policy->create($admin));
+        $this->assertTrue($this->policy->update($admin, $paciente));
+        $this->assertTrue($this->policy->delete($admin, $paciente));
+    }
 
-            $this->assertTrue($this->policy->create($usuario));
-            $this->assertTrue($this->policy->update($usuario, $paciente));
-            $this->assertTrue($this->policy->delete($usuario, $paciente));
-        }
+    public function test_diretor_tem_somente_leitura_em_pacientes(): void
+    {
+        $paciente = Paciente::factory()->create();
+        $diretor = User::factory()->create(['cargo' => 'diretor']);
+
+        $this->assertTrue($this->policy->viewAny($diretor));
+        $this->assertFalse($this->policy->create($diretor));
+        $this->assertFalse($this->policy->update($diretor, $paciente));
+        $this->assertFalse($this->policy->delete($diretor, $paciente));
     }
 
     public static function cargosComAcesso(): array
@@ -73,6 +81,6 @@ class PacientePolicyTest extends TestCase
 
     public static function cargosSemGestaoCadastral(): array
     {
-        return [['medico'], ['enfermeiro'], ['tecnico']];
+        return [['medico'], ['enfermeiro'], ['tecnico'], ['diretor']];
     }
 }

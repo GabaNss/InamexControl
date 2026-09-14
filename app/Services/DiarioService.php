@@ -59,6 +59,29 @@ class DiarioService
     }
 
     /**
+     * Desfaz um encerramento manual, reabrindo o dia para edicao. Exclusivo
+     * para admin (uso excepcional em caso de fechamento acidental).
+     */
+    public function reabrirDia(Carbon $data, ?User $usuario = null): DiarioStatus
+    {
+        $status = DiarioStatus::where('data', $data->toDateString())->firstOrFail();
+
+        $status->update([
+            'encerrado' => false,
+            'encerrado_em' => null,
+        ]);
+
+        $this->auditoriaService->registrar(
+            usuario: $usuario,
+            acao: 'diario.reaberto',
+            alvo: $status,
+            dadosDepois: ['data' => $data->toDateString(), 'encerrado' => false],
+        );
+
+        return $status;
+    }
+
+    /**
      * Atalho usado pelas Policies/Services para checar se uma data esta
      * encerrada (true) ou ainda aberta para edicao (false). Ausencia de
      * registro de DiarioStatus para a data significa dia ainda aberto.

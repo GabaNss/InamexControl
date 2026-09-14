@@ -66,4 +66,33 @@ class DiarioServiceTest extends TestCase
 
         $this->assertTrue($status->encerrado);
     }
+
+    public function test_reabrir_dia_desfaz_encerramento_e_registra_auditoria(): void
+    {
+        $hoje = Carbon::today();
+        $admin = User::factory()->create(['cargo' => 'admin']);
+
+        $this->diarioService->encerrarDia($hoje);
+        $this->assertTrue($this->diarioService->estaEncerrado($hoje));
+
+        $status = $this->diarioService->reabrirDia($hoje, $admin);
+
+        $this->assertFalse($status->encerrado);
+        $this->assertNull($status->encerrado_em);
+        $this->assertFalse($this->diarioService->estaEncerrado($hoje));
+
+        $this->assertDatabaseHas('logs_auditoria', [
+            'usuario_id' => $admin->id,
+            'acao' => 'diario.reaberto',
+            'alvo_type' => DiarioStatus::class,
+            'alvo_id' => $status->id,
+        ]);
+    }
+
+    public function test_reabrir_dia_inexistente_lanca_excecao(): void
+    {
+        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+
+        $this->diarioService->reabrirDia(Carbon::today());
+    }
 }

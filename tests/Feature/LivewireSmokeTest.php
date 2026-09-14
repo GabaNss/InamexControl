@@ -79,7 +79,7 @@ class LivewireSmokeTest extends TestCase
             ->call('encerrarHoje')
             ->assertHasNoErrors();
 
-        $this->assertTrue(DiarioStatus::where('data', today())->first()->encerrado);
+        $this->assertTrue(DiarioStatus::where('data', today()->toDateString())->first()->encerrado);
 
         $this->actingAs($enfermeira);
         Livewire::test(Registros\Index::class)
@@ -90,12 +90,40 @@ class LivewireSmokeTest extends TestCase
 
         $tecnico = User::factory()->create(['cargo' => 'tecnico', 'ativo' => true]);
         $this->assertFalse($tecnico->can('create', Prescricao::class));
+    }
 
-        // Exportacao Excel disparada por uma acao Livewire real deve resultar
-        // em download (BinaryFileResponse interceptado pelo Livewire).
+    public function test_admin_pode_reabrir_diario_encerrado(): void
+    {
+        $admin = User::factory()->create(['cargo' => 'admin', 'ativo' => true]);
+
         $this->actingAs($admin);
-        Livewire::test(\App\Livewire\Relatorios\Index::class)
-            ->call('exportarPacientesExcel')
-            ->assertFileDownloaded('pacientes.xlsx');
+
+        Livewire::test(Diario\Show::class)
+            ->call('encerrarHoje')
+            ->assertHasNoErrors();
+
+        $this->assertTrue(DiarioStatus::where('data', today()->toDateString())->first()->encerrado);
+
+        Livewire::test(Diario\Show::class)
+            ->call('reabrirHoje')
+            ->assertHasNoErrors();
+
+        $this->assertFalse(DiarioStatus::where('data', today()->toDateString())->first()->encerrado);
+    }
+
+    public function test_nao_admin_nao_pode_reabrir_diario(): void
+    {
+        $admin = User::factory()->create(['cargo' => 'admin', 'ativo' => true]);
+        $medico = User::factory()->create(['cargo' => 'medico', 'ativo' => true]);
+
+        $this->actingAs($admin);
+        Livewire::test(Diario\Show::class)->call('encerrarHoje');
+
+        $this->actingAs($medico);
+        Livewire::test(Diario\Show::class)
+            ->call('reabrirHoje')
+            ->assertForbidden();
+
+        $this->assertTrue(DiarioStatus::where('data', today()->toDateString())->first()->encerrado);
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Registro de que uma dose prescrita foi (ou nao) administrada em uma data/turno.
@@ -45,9 +47,17 @@ class RegistroMedicacao extends Model
     ];
 
     protected $casts = [
-        'data' => 'date',
         'administrado' => 'boolean',
     ];
+
+    // Garante que 'data' é sempre escrito como 'Y-m-d' no banco (mesmo em SQLite).
+    protected function data(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($v) => $v ? Carbon::parse($v)->startOfDay() : null,
+            set: fn ($v) => Carbon::parse($v)->toDateString(),
+        );
+    }
 
     /**
      * Prescricao de origem deste registro.

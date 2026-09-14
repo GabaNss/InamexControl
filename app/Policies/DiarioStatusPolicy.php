@@ -9,7 +9,7 @@ use App\Models\User;
  * Regras de acesso ao status de encerramento do diario.
  *
  * Qualquer cargo clinico pode visualizar se o dia esta aberto/encerrado.
- * Apenas admin e diretor podem forcar um encerramento ou reabertura manual
+ * Apenas admin pode forcar um encerramento ou reabertura manual
  * (excepcional — o fluxo normal e automatico, ver
  * App\Console\Commands\EncerrarDiarioCommand).
  */

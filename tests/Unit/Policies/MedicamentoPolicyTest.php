@@ -51,17 +51,28 @@ class MedicamentoPolicyTest extends TestCase
         }
     }
 
-    public function test_admin_diretor_e_medico_podem_gerenciar_o_catalogo(): void
+    public function test_admin_e_medico_podem_gerenciar_o_catalogo(): void
     {
         $medicamento = Medicamento::factory()->create();
 
-        foreach (['admin', 'diretor', 'medico'] as $cargo) {
+        foreach (['admin', 'medico'] as $cargo) {
             $usuario = User::factory()->create(['cargo' => $cargo]);
 
             $this->assertTrue($this->policy->create($usuario));
             $this->assertTrue($this->policy->update($usuario, $medicamento));
             $this->assertTrue($this->policy->delete($usuario, $medicamento));
         }
+    }
+
+    public function test_diretor_tem_somente_leitura_no_catalogo(): void
+    {
+        $medicamento = Medicamento::factory()->create();
+        $diretor = User::factory()->create(['cargo' => 'diretor']);
+
+        $this->assertTrue($this->policy->viewAny($diretor));
+        $this->assertFalse($this->policy->create($diretor));
+        $this->assertFalse($this->policy->update($diretor, $medicamento));
+        $this->assertFalse($this->policy->delete($diretor, $medicamento));
     }
 
     public static function cargosComAcesso(): array

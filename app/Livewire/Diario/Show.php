@@ -17,10 +17,6 @@ class Show extends Component
         $this->authorize('viewAny', DiarioStatus::class);
     }
 
-    /**
-     * Encerramento manual, excepcional — o fluxo normal e automatico via
-     * App\Console\Commands\EncerrarDiarioCommand a meia-noite.
-     */
     public function encerrarHoje(): void
     {
         $this->authorize('encerrar-diario-manual');
@@ -30,10 +26,24 @@ class Show extends Component
         session()->flash('status', 'Diario de hoje encerrado manualmente.');
     }
 
+    public function reabrirHoje(): void
+    {
+        $this->authorize('encerrar-diario-manual');
+
+        app(DiarioService::class)->reabrirDia(Carbon::today(), auth()->user());
+
+        session()->flash('status', 'Diario de hoje reaberto.');
+    }
+
     public function render(): View
     {
         $historico = DiarioStatus::orderByDesc('data')->limit(14)->get();
 
-        return view('livewire.diario.show', ['historico' => $historico]);
+        $diaHojeEncerrado = app(DiarioService::class)->estaEncerrado(Carbon::today());
+
+        return view('livewire.diario.show', [
+            'historico' => $historico,
+            'diaHojeEncerrado' => $diaHojeEncerrado,
+        ]);
     }
 }

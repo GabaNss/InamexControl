@@ -42,16 +42,27 @@ class PrescricaoPolicyTest extends TestCase
         }
     }
 
-    public function test_medico_diretor_e_admin_podem_prescrever(): void
+    public function test_medico_e_admin_podem_prescrever(): void
     {
         $prescricao = Prescricao::factory()->create();
 
-        foreach (['medico', 'diretor', 'admin'] as $cargo) {
+        foreach (['medico', 'admin'] as $cargo) {
             $usuario = User::factory()->create(['cargo' => $cargo]);
 
             $this->assertTrue($this->policy->create($usuario));
             $this->assertTrue($this->policy->update($usuario, $prescricao));
             $this->assertTrue($this->policy->delete($usuario, $prescricao));
         }
+    }
+
+    public function test_diretor_tem_somente_leitura_em_prescricoes(): void
+    {
+        $prescricao = Prescricao::factory()->create();
+        $diretor = User::factory()->create(['cargo' => 'diretor']);
+
+        $this->assertTrue($this->policy->viewAny($diretor));
+        $this->assertFalse($this->policy->create($diretor));
+        $this->assertFalse($this->policy->update($diretor, $prescricao));
+        $this->assertFalse($this->policy->delete($diretor, $prescricao));
     }
 }

@@ -33,14 +33,18 @@ class UserPolicyTest extends TestCase
         }
     }
 
-    public function test_diretor_nao_pode_criar_ou_editar_usuarios(): void
+    public function test_diretor_pode_criar_e_editar_usuarios_nao_admin(): void
     {
         $diretor = User::factory()->create(['cargo' => 'diretor']);
-        $alvo = User::factory()->create();
+        $alvo = User::factory()->create(['cargo' => 'tecnico']);
+        $alvo_admin = User::factory()->create(['cargo' => 'admin']);
 
-        $this->assertFalse($this->policy->create($diretor));
-        $this->assertFalse($this->policy->update($diretor, $alvo));
-        $this->assertFalse($this->policy->delete($diretor, $alvo));
+        $this->assertTrue($this->policy->create($diretor));
+        $this->assertTrue($this->policy->update($diretor, $alvo));
+        $this->assertTrue($this->policy->delete($diretor, $alvo));
+
+        $this->assertFalse($this->policy->update($diretor, $alvo_admin));
+        $this->assertFalse($this->policy->delete($diretor, $alvo_admin));
     }
 
     public function test_admin_pode_criar_e_editar_usuarios(): void

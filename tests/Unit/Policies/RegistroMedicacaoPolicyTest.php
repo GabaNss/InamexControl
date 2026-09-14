@@ -38,10 +38,13 @@ class RegistroMedicacaoPolicyTest extends TestCase
 
     public function test_equipe_clinica_pode_criar_registros_com_dia_aberto(): void
     {
-        foreach (['admin', 'diretor', 'medico', 'enfermeiro', 'tecnico'] as $cargo) {
+        foreach (['admin', 'medico', 'enfermeiro', 'tecnico'] as $cargo) {
             $usuario = User::factory()->create(['cargo' => $cargo]);
             $this->assertTrue($this->policy->create($usuario));
         }
+
+        $diretor = User::factory()->create(['cargo' => 'diretor']);
+        $this->assertFalse($this->policy->create($diretor));
     }
 
     public function test_update_e_permitido_com_dia_aberto(): void

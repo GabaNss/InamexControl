@@ -15,19 +15,33 @@
             @can('encerrar-diario-manual')
                 <div class="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4">
                     <p class="text-sm text-gray-600 flex-1">
-                        O encerramento normal e automatico, todo dia a meia-noite. Use a opcao abaixo apenas em situacoes excepcionais.
+                        O encerramento normal e automatico, todo dia a meia-noite. Use as opcoes abaixo apenas em situacoes excepcionais.
                     </p>
-                    <button
-                        type="button"
-                        wire:click="encerrarHoje"
-                        wire:confirm="Encerrar o diario de hoje agora? Os registros de hoje ficarao imutaveis."
-                        wire:loading.attr="disabled"
-                        wire:target="encerrarHoje"
-                        class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md text-sm text-white hover:bg-red-700 disabled:opacity-50"
-                    >
-                        <span wire:loading.remove wire:target="encerrarHoje">Encerrar hoje manualmente</span>
-                        <span wire:loading wire:target="encerrarHoje">Encerrando...</span>
-                    </button>
+                    @if ($diaHojeEncerrado)
+                        <button
+                            type="button"
+                            wire:click="reabrirHoje"
+                            wire:confirm="Reabrir o diario de hoje? Os registros voltarao a ser editaveis."
+                            wire:loading.attr="disabled"
+                            wire:target="reabrirHoje"
+                            class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center px-4 py-2 bg-yellow-600 border border-transparent rounded-md text-sm text-white hover:bg-yellow-700 disabled:opacity-50"
+                        >
+                            <span wire:loading.remove wire:target="reabrirHoje">Reabrir hoje</span>
+                            <span wire:loading wire:target="reabrirHoje">Reabrindo...</span>
+                        </button>
+                    @else
+                        <button
+                            type="button"
+                            wire:click="encerrarHoje"
+                            wire:confirm="Encerrar o diario de hoje agora? Os registros de hoje ficarao imutaveis."
+                            wire:loading.attr="disabled"
+                            wire:target="encerrarHoje"
+                            class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md text-sm text-white hover:bg-red-700 disabled:opacity-50"
+                        >
+                            <span wire:loading.remove wire:target="encerrarHoje">Encerrar hoje manualmente</span>
+                            <span wire:loading wire:target="encerrarHoje">Encerrando...</span>
+                        </button>
+                    @endif
                 </div>
             @endcan
 
