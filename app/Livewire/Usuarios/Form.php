@@ -46,7 +46,7 @@ class Form extends Component
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user?->id)],
-            'cargo' => ['required', 'in:' . implode(',', User::CARGOS)],
+            'cargo' => ['required', 'in:' . implode(',', $this->cargosPermitidos())],
             'ativo' => ['boolean'],
         ];
 
@@ -77,8 +77,17 @@ class Form extends Component
         $this->redirectRoute('usuarios.index', navigate: true);
     }
 
+    private function cargosPermitidos(): array
+    {
+        if (auth()->user()?->temCargo('admin')) {
+            return User::CARGOS;
+        }
+
+        return array_values(array_diff(User::CARGOS, ['admin']));
+    }
+
     public function render(): View
     {
-        return view('livewire.usuarios.form', ['cargos' => User::CARGOS]);
+        return view('livewire.usuarios.form', ['cargos' => $this->cargosPermitidos()]);
     }
 }

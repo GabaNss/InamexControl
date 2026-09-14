@@ -3,13 +3,16 @@
 namespace App\Livewire\Internas;
 
 use App\Models\DiarioStatus;
+use App\Models\Paciente;
 use App\Models\ProntuarioDiario as ModelProntuarioDiario;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class ProntuarioDiario extends Component
 {
+    #[Locked]
     public int $pacienteId;
 
     public string $dataSelecionada;
@@ -22,6 +25,7 @@ class ProntuarioDiario extends Component
 
     public function mount(int $pacienteId): void
     {
+        $this->authorize('view', Paciente::findOrFail($pacienteId));
         $this->pacienteId = $pacienteId;
         $this->dataSelecionada = Carbon::today()->toDateString();
         $this->carregarDia();

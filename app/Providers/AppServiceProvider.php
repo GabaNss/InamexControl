@@ -40,6 +40,13 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
+        if ($this->app->isProduction()) {
+            if (config('app.debug')) {
+                abort(500, 'APP_DEBUG must be false in production.');
+            }
+            config(['session.secure' => true]);
+        }
+
         // REGRA CRITICA: usuario desativado (User.ativo = false) nao pode fazer
         // nada no sistema, independente do cargo — checado antes de qualquer
         // outra Gate/Policy.

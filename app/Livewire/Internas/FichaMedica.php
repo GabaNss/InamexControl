@@ -3,11 +3,14 @@
 namespace App\Livewire\Internas;
 
 use App\Models\FichaMedica as ModelFichaMedica;
+use App\Models\Paciente;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class FichaMedica extends Component
 {
+    #[Locked]
     public int $pacienteId;
 
     public string $laudos = '';
@@ -20,6 +23,7 @@ class FichaMedica extends Component
 
     public function mount(int $pacienteId): void
     {
+        $this->authorize('view', Paciente::findOrFail($pacienteId));
         $this->pacienteId = $pacienteId;
         $this->carregarFicha();
     }

@@ -3,21 +3,25 @@
 namespace App\Livewire\Internas;
 
 use App\Exceptions\DiaEncerradoException;
+use App\Models\Paciente;
 use App\Models\RegistroMedicacao;
 use App\Services\DiarioService;
 use App\Services\RegistroMedicacaoService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class RegistrosPanel extends Component
 {
+    #[Locked]
     public int $pacienteId;
 
     public string $data;
 
     public function mount(int $pacienteId): void
     {
+        $this->authorize('view', Paciente::findOrFail($pacienteId));
         $this->pacienteId = $pacienteId;
         $this->data = Carbon::today()->toDateString();
         $this->gerarPendentesSeHoje();

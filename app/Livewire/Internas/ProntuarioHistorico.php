@@ -2,12 +2,15 @@
 
 namespace App\Livewire\Internas;
 
+use App\Models\Paciente;
 use App\Models\ProntuarioHistorico as ModelProntuarioHistorico;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class ProntuarioHistorico extends Component
 {
+    #[Locked]
     public int $pacienteId;
 
     public string $conteudo = '';
@@ -16,6 +19,7 @@ class ProntuarioHistorico extends Component
 
     public function mount(int $pacienteId): void
     {
+        $this->authorize('view', Paciente::findOrFail($pacienteId));
         $this->pacienteId = $pacienteId;
         $this->carregarConteudo();
     }
