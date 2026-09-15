@@ -8,10 +8,13 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// Encerramento automatico do diario: roda todo dia a meia-noite, tornando
-// imutaveis os RegistroMedicacao do dia que terminou e abrindo o novo dia.
-// Requer um scheduler ativo no servidor (cron chamando "php artisan schedule:run"
-// a cada minuto, ou um worker/cron equivalente no provedor de hospedagem).
+// 00:01 — abre o diario do novo dia e gera os registros de medicacao
+// pendentes para todas as prescricoes ativas.
+Schedule::command('diario:abrir')
+    ->dailyAt('00:01')
+    ->withoutOverlapping();
+
+// 23:59 — encerra o diario do dia atual, tornando os registros imutaveis.
 Schedule::command('diario:encerrar')
-    ->dailyAt('00:00')
+    ->dailyAt('23:59')
     ->withoutOverlapping();

@@ -9,17 +9,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Encerra o diario do dia atual, tornando os RegistroMedicacao imutaveis.
- * Executado automaticamente às 23:59 pelo scheduler.
- *
- * $usuario = null em DiarioService::encerrarDia() porque esta acao e
- * disparada pelo sistema (cron), nao por um usuario autenticado.
+ * Abre o diario do dia atual e gera os RegistroMedicacao pendentes para as
+ * prescricoes ativas. Executado automaticamente às 00:01 pelo scheduler.
  */
-class EncerrarDiarioCommand extends Command
+class AbrirDiarioCommand extends Command
 {
-    protected $signature = 'diario:encerrar';
+    protected $signature = 'diario:abrir';
 
-    protected $description = 'Encerra o diario do dia atual (executado automaticamente às 23:59).';
+    protected $description = 'Abre o diario do dia atual e gera os registros de medicacao pendentes (executado automaticamente às 00:01).';
 
     public function __construct(
         private readonly DiarioService $diarioService,
@@ -33,10 +30,11 @@ class EncerrarDiarioCommand extends Command
         $hoje = Carbon::today();
 
         DB::transaction(function () use ($hoje): void {
-            $this->diarioService->encerrarDia($hoje);
+            $this->diarioService->abrirDia($hoje);
+            $this->registroMedicacaoService->gerarRegistrosDoDia($hoje);
         });
 
-        $this->info("Diario de {$hoje->toDateString()} encerrado.");
+        $this->info("Diario de {$hoje->toDateString()} aberto e registros pendentes gerados.");
 
         return self::SUCCESS;
     }
