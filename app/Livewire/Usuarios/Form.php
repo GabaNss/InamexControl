@@ -22,6 +22,10 @@ class Form extends Component
 
     public bool $ativo = true;
 
+    public string $turno_inicio = '';
+
+    public string $turno_fim = '';
+
     public string $password = '';
 
     public string $password_confirmation = '';
@@ -36,6 +40,8 @@ class Form extends Component
             $this->email = $user->email;
             $this->cargo = $user->cargo;
             $this->ativo = $user->ativo;
+            $this->turno_inicio = $user->turno_inicio ?? '';
+            $this->turno_fim = $user->turno_fim ?? '';
         } else {
             $this->authorize('create', User::class);
         }
@@ -48,6 +54,8 @@ class Form extends Component
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user?->id)],
             'cargo' => ['required', 'in:' . implode(',', $this->cargosPermitidos())],
             'ativo' => ['boolean'],
+            'turno_inicio' => ['required', 'date_format:H:i'],
+            'turno_fim' => ['required', 'date_format:H:i'],
         ];
 
         // So exige senha na criacao, ou na edicao se o usuario digitou algo

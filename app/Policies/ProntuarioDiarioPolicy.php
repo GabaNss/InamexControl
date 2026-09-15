@@ -19,7 +19,7 @@ class ProntuarioDiarioPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('enfermeiro', 'chefe_enfermagem', 'admin');
+        return $user->temCargo('enfermeiro', 'chefe_enfermagem', 'admin') && $user->estaNoTurno();
     }
 
     public function update(User $user, ProntuarioDiario $prontuario): bool
@@ -28,7 +28,7 @@ class ProntuarioDiarioPolicy
             return false;
         }
 
-        return $user->temCargo('enfermeiro', 'chefe_enfermagem', 'admin');
+        return $user->temCargo('enfermeiro', 'chefe_enfermagem', 'admin') && $user->estaNoTurno();
     }
 
     public function delete(User $user, ProntuarioDiario $prontuario): bool

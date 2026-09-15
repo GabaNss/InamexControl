@@ -25,16 +25,16 @@ class MedicamentoPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('admin', 'medico', 'chefe_enfermagem');
+        return $user->temCargo('admin', 'medico', 'chefe_enfermagem') && $user->estaNoTurno();
     }
 
     public function update(User $user, Medicamento $medicamento): bool
     {
-        return $user->temCargo('admin', 'medico', 'chefe_enfermagem');
+        return $user->temCargo('admin', 'medico', 'chefe_enfermagem') && $user->estaNoTurno();
     }
 
     public function delete(User $user, Medicamento $medicamento): bool
     {
-        return $user->temCargo('admin', 'medico', 'chefe_enfermagem');
+        return $user->temCargo('admin', 'medico', 'chefe_enfermagem') && $user->estaNoTurno();
     }
 }

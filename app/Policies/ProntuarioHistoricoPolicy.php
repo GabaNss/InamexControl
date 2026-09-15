@@ -19,12 +19,12 @@ class ProntuarioHistoricoPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('chefe_enfermagem', 'admin');
+        return $user->temCargo('chefe_enfermagem', 'admin') && $user->estaNoTurno();
     }
 
     public function update(User $user, ProntuarioHistorico $prontuario): bool
     {
-        return $user->temCargo('chefe_enfermagem', 'admin');
+        return $user->temCargo('chefe_enfermagem', 'admin') && $user->estaNoTurno();
     }
 
     public function delete(User $user, ProntuarioHistorico $prontuario): bool

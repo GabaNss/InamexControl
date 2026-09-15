@@ -97,4 +97,41 @@ class RegistroMedicacaoPolicyTest extends TestCase
 
         $this->assertFalse($this->policy->delete($admin, $registro));
     }
+
+    public function test_nao_pode_criar_registro_fora_do_turno(): void
+    {
+        $agora = now();
+
+        $foraDoTurno = User::factory()->create([
+            'cargo' => 'enfermeiro',
+            'turno_inicio' => $agora->copy()->addHour()->format('H:i:s'),
+            'turno_fim' => $agora->copy()->addHours(2)->format('H:i:s'),
+        ]);
+
+        $this->assertFalse($this->policy->create($foraDoTurno));
+    }
+
+    public function test_pode_criar_registro_dentro_do_turno(): void
+    {
+        $agora = now();
+
+        $noTurno = User::factory()->create([
+            'cargo' => 'enfermeiro',
+            'turno_inicio' => $agora->copy()->subHour()->format('H:i:s'),
+            'turno_fim' => $agora->copy()->addHour()->format('H:i:s'),
+        ]);
+
+        $this->assertTrue($this->policy->create($noTurno));
+    }
+
+    public function test_admin_pode_criar_registro_independente_do_turno(): void
+    {
+        $admin = User::factory()->create([
+            'cargo' => 'admin',
+            'turno_inicio' => '00:00:00',
+            'turno_fim' => '00:01:00',
+        ]);
+
+        $this->assertTrue($this->policy->create($admin));
+    }
 }

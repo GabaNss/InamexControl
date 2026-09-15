@@ -31,6 +31,19 @@
                         <x-input-error :messages="$errors->get('cargo')" class="mt-2" />
                     </div>
 
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <x-input-label for="turno_inicio" value="Início do turno" />
+                            <x-text-input id="turno_inicio" type="time" class="mt-1 block w-full" wire:model.blur="turno_inicio" required />
+                            <x-input-error :messages="$errors->get('turno_inicio')" class="mt-2" />
+                        </div>
+                        <div>
+                            <x-input-label for="turno_fim" value="Fim do turno" />
+                            <x-text-input id="turno_fim" type="time" class="mt-1 block w-full" wire:model.blur="turno_fim" required />
+                            <x-input-error :messages="$errors->get('turno_fim')" class="mt-2" />
+                        </div>
+                    </div>
+
                     <div>
                         <x-input-label for="password" :value="$user ? 'Nova senha (deixe em branco para manter)' : 'Senha'" />
                         <x-text-input id="password" type="password" class="mt-1 block w-full" wire:model.blur="password" autocomplete="new-password" />

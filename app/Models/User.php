@@ -23,6 +23,8 @@ class User extends Authenticatable
         'password',
         'cargo',
         'ativo',
+        'turno_inicio',
+        'turno_fim',
     ];
 
     /**
@@ -89,6 +91,32 @@ class User extends Authenticatable
     public function temCargoAtribuido(): bool
     {
         return $this->temCargo(...self::CARGOS_COM_ACESSO);
+    }
+
+    /**
+     * Verifica se o horario atual esta dentro do turno do usuario.
+     * Admin sempre retorna true (sem restricao de turno).
+     * Se turno_inicio ou turno_fim for null, sem restricao (turno nao definido).
+     * Suporta turnos noturnos que passam da meia-noite (ex: 22:00-06:00).
+     */
+    public function estaNoTurno(): bool
+    {
+        if ($this->temCargo('admin')) {
+            return true;
+        }
+
+        if ($this->turno_inicio === null || $this->turno_fim === null) {
+            return true;
+        }
+
+        $agora = now()->format('H:i:s');
+
+        if ($this->turno_inicio <= $this->turno_fim) {
+            return $agora >= $this->turno_inicio && $agora <= $this->turno_fim;
+        }
+
+        // Turno noturno: passa da meia-noite
+        return $agora >= $this->turno_inicio || $agora <= $this->turno_fim;
     }
 
     /**

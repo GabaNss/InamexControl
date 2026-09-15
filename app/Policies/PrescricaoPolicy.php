@@ -25,16 +25,16 @@ class PrescricaoPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('admin', 'medico');
+        return $user->temCargo('admin', 'medico') && $user->estaNoTurno();
     }
 
     public function update(User $user, Prescricao $prescricao): bool
     {
-        return $user->temCargo('admin', 'medico');
+        return $user->temCargo('admin', 'medico') && $user->estaNoTurno();
     }
 
     public function delete(User $user, Prescricao $prescricao): bool
     {
-        return $user->temCargo('admin', 'medico');
+        return $user->temCargo('admin', 'medico') && $user->estaNoTurno();
     }
 }

@@ -25,16 +25,16 @@ class PacientePolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('admin', 'chefe_enfermagem');
+        return $user->temCargo('admin', 'chefe_enfermagem') && $user->estaNoTurno();
     }
 
     public function update(User $user, Paciente $paciente): bool
     {
-        return $user->temCargo('admin', 'chefe_enfermagem');
+        return $user->temCargo('admin', 'chefe_enfermagem') && $user->estaNoTurno();
     }
 
     public function delete(User $user, Paciente $paciente): bool
     {
-        return $user->temCargo('admin', 'chefe_enfermagem');
+        return $user->temCargo('admin', 'chefe_enfermagem') && $user->estaNoTurno();
     }
 }
