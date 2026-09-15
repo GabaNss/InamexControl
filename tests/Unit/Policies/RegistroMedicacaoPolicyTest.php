@@ -47,6 +47,16 @@ class RegistroMedicacaoPolicyTest extends TestCase
         $this->assertFalse($this->policy->create($diretor));
     }
 
+    public function test_ninguem_pode_criar_registro_com_dia_encerrado(): void
+    {
+        $this->diarioService->encerrarDia(Carbon::today());
+
+        foreach (['admin', 'medico', 'enfermeiro', 'tecnico'] as $cargo) {
+            $usuario = User::factory()->create(['cargo' => $cargo]);
+            $this->assertFalse($this->policy->create($usuario));
+        }
+    }
+
     public function test_update_e_permitido_com_dia_aberto(): void
     {
         $enfermeira = User::factory()->create(['cargo' => 'enfermeiro']);

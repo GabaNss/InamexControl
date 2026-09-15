@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\RegistroMedicacao;
 use App\Models\User;
 use App\Services\RegistroMedicacaoService;
+use Illuminate\Support\Carbon;
 
 /**
  * Regras de acesso aos registros de administracao de medicacao.
@@ -36,7 +37,8 @@ class RegistroMedicacaoPolicy
 
     public function create(User $user): bool
     {
-        return $user->temCargo('admin', 'medico', 'enfermeiro', 'chefe_enfermagem', 'tecnico');
+        return $user->temCargo('admin', 'medico', 'enfermeiro', 'chefe_enfermagem', 'tecnico')
+            && $this->registroMedicacaoService->diaEstaAberto(Carbon::today());
     }
 
     public function update(User $user, RegistroMedicacao $registroMedicacao): bool
