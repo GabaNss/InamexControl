@@ -21,7 +21,7 @@ class ProfileTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_profile_information_can_be_updated(): void
+    public function test_profile_name_can_be_updated(): void
     {
         $user = User::factory()->create();
 
@@ -29,7 +29,6 @@ class ProfileTest extends TestCase
             ->actingAs($user)
             ->patch('/profile', [
                 'name' => 'Test User',
-                'email' => 'test@example.com',
             ]);
 
         $response
@@ -39,26 +38,23 @@ class ProfileTest extends TestCase
         $user->refresh();
 
         $this->assertSame('Test User', $user->name);
-        $this->assertSame('test@example.com', $user->email);
-        $this->assertNull($user->email_verified_at);
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
+    public function test_login_email_cannot_be_changed_via_profile(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['email' => 'original@inamex.com']);
 
-        $response = $this
+        $this
             ->actingAs($user)
             ->patch('/profile', [
                 'name' => 'Test User',
-                'email' => $user->email,
-            ]);
-
-        $response
+                'email' => 'hacker@evil.com',
+            ])
             ->assertSessionHasNoErrors()
             ->assertRedirect('/profile');
 
-        $this->assertNotNull($user->refresh()->email_verified_at);
+        // O e-mail de login permanece inalterado, mesmo tendo sido enviado no POST.
+        $this->assertSame('original@inamex.com', $user->refresh()->email);
     }
 
     public function test_user_can_delete_their_account(): void

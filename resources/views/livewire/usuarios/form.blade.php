@@ -33,13 +33,13 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <x-input-label for="turno_inicio" value="Início do turno" />
-                            <x-text-input id="turno_inicio" type="time" class="mt-1 block w-full" wire:model.blur="turno_inicio" required />
+                            <x-input-label for="turno_inicio" value="Início do turno (opcional)" />
+                            <x-text-input id="turno_inicio" type="time" class="mt-1 block w-full" wire:model.blur="turno_inicio" />
                             <x-input-error :messages="$errors->get('turno_inicio')" class="mt-2" />
                         </div>
                         <div>
-                            <x-input-label for="turno_fim" value="Fim do turno" />
-                            <x-text-input id="turno_fim" type="time" class="mt-1 block w-full" wire:model.blur="turno_fim" required />
+                            <x-input-label for="turno_fim" value="Fim do turno (opcional)" />
+                            <x-text-input id="turno_fim" type="time" class="mt-1 block w-full" wire:model.blur="turno_fim" />
                             <x-input-error :messages="$errors->get('turno_fim')" class="mt-2" />
                         </div>
                     </div>

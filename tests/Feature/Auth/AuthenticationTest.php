@@ -42,6 +42,19 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_conta_desativada_nao_consegue_autenticar(): void
+    {
+        $user = User::factory()->create(['ativo' => false]);
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        // Mesmo com a senha correta, conta desativada nao cria sessao.
+        $this->assertGuest();
+    }
+
     public function test_users_can_logout(): void
     {
         $user = User::factory()->create();

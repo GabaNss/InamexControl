@@ -26,11 +26,9 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        // Apenas o 'name' e atualizavel aqui. O e-mail de login e imutavel pelo
+        // usuario (ver ProfileUpdateRequest) e a senha e trocada em telas proprias.
         $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
 
         $request->user()->save();
 

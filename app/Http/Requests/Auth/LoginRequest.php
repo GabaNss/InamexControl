@@ -42,7 +42,13 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // Inclui 'ativo' => true nas credenciais: uma conta desativada (ex:
+        // funcionario afastado/desligado) nao autentica de forma alguma, nem
+        // chega a criar sessao. A mensagem permanece generica (auth.failed),
+        // sem revelar que a conta existe mas esta desativada.
+        $credenciais = array_merge($this->only('email', 'password'), ['ativo' => true]);
+
+        if (! Auth::attempt($credenciais, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

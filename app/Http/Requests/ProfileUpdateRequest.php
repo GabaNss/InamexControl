@@ -2,15 +2,18 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
+     *
+     * O e-mail de LOGIN e imutavel pelo usuario (definido apenas por um admin na
+     * criacao da conta), por isso NAO entra nas regras — qualquer 'email' enviado
+     * no request e ignorado (nunca chega ao $request->validated()). Ver tambem
+     * App\Http\Controllers\ProfileController::update.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
@@ -18,14 +21,6 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
-            ],
         ];
     }
 }

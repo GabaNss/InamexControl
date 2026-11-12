@@ -54,8 +54,8 @@ class Form extends Component
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user?->id)],
             'cargo' => ['required', 'in:' . implode(',', $this->cargosPermitidos())],
             'ativo' => ['boolean'],
-            'turno_inicio' => ['required', 'date_format:H:i'],
-            'turno_fim' => ['required', 'date_format:H:i'],
+            'turno_inicio' => ['nullable', 'date_format:H:i'],
+            'turno_fim' => ['nullable', 'date_format:H:i'],
         ];
 
         // So exige senha na criacao, ou na edicao se o usuario digitou algo
@@ -65,6 +65,10 @@ class Form extends Component
         }
 
         $dados = $this->validate($rules);
+
+        // Converte string vazia para null (campo de hora deixado em branco).
+        $dados['turno_inicio'] = $dados['turno_inicio'] ?: null;
+        $dados['turno_fim'] = $dados['turno_fim'] ?: null;
 
         unset($dados['password']);
 
@@ -77,6 +81,7 @@ class Form extends Component
             $this->user->update($dados);
         } else {
             $this->authorize('create', User::class);
+            $dados['must_change_password'] = true;
             User::create($dados);
         }
 

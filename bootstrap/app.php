@@ -11,6 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->appendToGroup('web', \App\Http\Middleware\PrimeiroAcesso::class);
         // Confia no(s) proxy(s)/load balancer da hospedagem para que o Laravel
         // reconheca corretamente o esquema (https) e o IP original do cliente
         // a partir dos headers X-Forwarded-* — essencial para

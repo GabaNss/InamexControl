@@ -30,6 +30,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Primeiro acesso: definir senha e e-mail de recuperação (obrigatório antes de qualquer outra rota).
+Route::get('/primeiro-acesso', \App\Livewire\PrimeiroAcesso::class)
+    ->middleware('auth')
+    ->name('primeiro-acesso');
+
 // Perfil do proprio usuario autenticado (Breeze) — qualquer cargo logado.
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
