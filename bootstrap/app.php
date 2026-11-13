@@ -12,6 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->appendToGroup('web', \App\Http\Middleware\PrimeiroAcesso::class);
+        // Cabecalhos de seguranca + no-store em respostas autenticadas (LGPD).
+        $middleware->appendToGroup('web', \App\Http\Middleware\SegurancaHeaders::class);
         // Confia no(s) proxy(s)/load balancer da hospedagem para que o Laravel
         // reconheca corretamente o esquema (https) e o IP original do cliente
         // a partir dos headers X-Forwarded-* — essencial para
