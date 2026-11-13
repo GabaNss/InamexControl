@@ -41,7 +41,9 @@ Route::get('/primeiro-acesso', \App\Livewire\PrimeiroAcesso::class)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Sem auto-exclusao de conta: num sistema clinico as contas sao apenas
+    // desativadas (campo 'ativo') pelo admin, para preservar a trilha de
+    // auditoria exigida pela LGPD. Ver App\Livewire\Usuarios\Index::desativar().
 });
 
 /*

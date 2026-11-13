@@ -57,38 +57,18 @@ class ProfileTest extends TestCase
         $this->assertSame('original@inamex.com', $user->refresh()->email);
     }
 
-    public function test_user_can_delete_their_account(): void
+    public function test_account_self_deletion_route_does_not_exist(): void
     {
-        $user = User::factory()->create();
+        // Sistema clinico: o usuario nao pode excluir a propria conta. Contas sao
+        // apenas desativadas pelo admin, preservando a trilha de auditoria (LGPD).
+        $this->assertFalse(\Illuminate\Support\Facades\Route::has('profile.destroy'));
 
-        $response = $this
+        $user = User::factory()->create(['ativo' => true]);
+
+        $this
             ->actingAs($user)
-            ->delete('/profile', [
-                'password' => 'password',
-            ]);
-
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/');
-
-        $this->assertGuest();
-        $this->assertNull($user->fresh());
-    }
-
-    public function test_correct_password_must_be_provided_to_delete_account(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this
-            ->actingAs($user)
-            ->from('/profile')
-            ->delete('/profile', [
-                'password' => 'wrong-password',
-            ]);
-
-        $response
-            ->assertSessionHasErrorsIn('userDeletion', 'password')
-            ->assertRedirect('/profile');
+            ->delete('/profile', ['password' => 'password'])
+            ->assertStatus(405); // Method Not Allowed: so GET e PATCH existem em /profile
 
         $this->assertNotNull($user->fresh());
     }
