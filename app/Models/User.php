@@ -27,6 +27,7 @@ class User extends Authenticatable
         'turno_fim',
         'recovery_email',
         'must_change_password',
+        'termos_aceitos_em',
     ];
 
     /**
@@ -152,6 +153,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'must_change_password' => 'boolean',
+            'termos_aceitos_em' => 'datetime',
         ];
     }
 }

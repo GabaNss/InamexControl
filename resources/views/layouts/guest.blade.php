@@ -23,6 +23,12 @@
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg border-t-4 border-brand-600">
                 {{ $slot }}
             </div>
+
+            <footer class="mt-6 text-xs text-gray-600">
+                <a href="{{ route('privacidade') }}" class="underline hover:text-brand-700 rounded focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">Aviso de Privacidade</a>
+                <span class="mx-2" aria-hidden="true">·</span>
+                <a href="{{ route('termos') }}" class="underline hover:text-brand-700 rounded focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">Termo de Uso</a>
+            </footer>
         </div>
     </body>
 </html>

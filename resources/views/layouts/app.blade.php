@@ -35,6 +35,15 @@
             <main id="conteudo" tabindex="-1">
                 {{ $slot }}
             </main>
+
+            <footer class="mt-8 border-t border-gray-100 bg-white">
+                <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-xs text-gray-600 flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span>Documento confidencial — dados pessoais sensíveis (LGPD).</span>
+                    <a href="{{ route('privacidade') }}" class="underline hover:text-brand-700 rounded focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">Aviso de Privacidade</a>
+                    <span aria-hidden="true">·</span>
+                    <a href="{{ route('termos') }}" class="underline hover:text-brand-700 rounded focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">Termo de Uso</a>
+                </div>
+            </footer>
         </div>
     </body>
 </html>

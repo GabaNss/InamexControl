@@ -37,6 +37,17 @@ Route::get('/primeiro-acesso', \App\Livewire\PrimeiroAcesso::class)
     ->middleware('auth')
     ->name('primeiro-acesso');
 
+// Documentos legais públicos (LGPD): acessíveis sem login, linkados no rodapé.
+Route::view('/privacidade', 'legal.privacidade')->name('privacidade');
+Route::view('/termos', 'legal.termos')->name('termos');
+
+// Aceite do termo de uso/confidencialidade (obrigatório no primeiro acesso ou
+// quando a versão do termo muda — ver App\Http\Middleware\AceiteTermos).
+Route::middleware('auth')->group(function () {
+    Route::get('/termos/aceite', [\App\Http\Controllers\AceiteTermosController::class, 'show'])->name('termos.aceite');
+    Route::post('/termos/aceite', [\App\Http\Controllers\AceiteTermosController::class, 'aceitar'])->name('termos.aceitar');
+});
+
 // Perfil do proprio usuario autenticado (Breeze) — qualquer cargo logado.
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

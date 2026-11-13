@@ -31,6 +31,11 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'turno_inicio' => null,
             'turno_fim' => null,
+            // Por padrao o usuario de teste ja aceitou o termo vigente, para nao
+            // ser redirecionado pelo middleware AceiteTermos. Testes do fluxo de
+            // aceite sobrescrevem com null. Usuarios reais nascem com null (o
+            // Usuarios\Form nao preenche este campo) e precisam aceitar.
+            'termos_aceitos_em' => now(),
         ];
     }
 
