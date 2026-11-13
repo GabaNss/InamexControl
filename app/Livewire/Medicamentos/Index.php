@@ -26,7 +26,16 @@ class Index extends Component
         $this->authorize('delete', $medicamento);
 
         try {
+            $dadosAntes = $medicamento->only(['nome', 'concentracao', 'via_administracao', 'ativo']);
             $medicamento->delete();
+
+            app(\App\Services\AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'medicamento.excluido',
+                alvo: $medicamento,
+                dadosAntes: $dadosAntes,
+            );
+
             session()->flash('status', 'Medicamento removido.');
         } catch (QueryException) {
             session()->flash('erro', 'Este medicamento esta em uso em prescricoes e nao pode ser removido. Desative-o em vez disso.');

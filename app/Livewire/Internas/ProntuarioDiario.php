@@ -5,6 +5,7 @@ namespace App\Livewire\Internas;
 use App\Models\DiarioStatus;
 use App\Models\Paciente;
 use App\Models\ProntuarioDiario as ModelProntuarioDiario;
+use App\Services\AuditoriaService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Locked;
@@ -67,7 +68,15 @@ class ProntuarioDiario extends Component
 
         if ($prontuario) {
             $this->authorize('delete', $prontuario);
+            $dadosAntes = $prontuario->only(['data', 'conteudo']);
             $prontuario->delete();
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'prontuario_diario.excluido',
+                alvo: $prontuario,
+                dadosAntes: $dadosAntes,
+            );
         }
 
         $this->carregarDia();
@@ -88,9 +97,19 @@ class ProntuarioDiario extends Component
             $this->authorize('create', ModelProntuarioDiario::class);
         }
 
-        ModelProntuarioDiario::updateOrCreate(
+        $dadosAntes = $existente?->only(['conteudo']);
+
+        $prontuario = ModelProntuarioDiario::updateOrCreate(
             ['paciente_id' => $this->pacienteId, 'data' => $this->dataSelecionada],
             ['conteudo' => $this->conteudo, 'atualizado_por' => auth()->id()],
+        );
+
+        app(AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: $existente ? 'prontuario_diario.atualizado' : 'prontuario_diario.criado',
+            alvo: $prontuario,
+            dadosAntes: $dadosAntes,
+            dadosDepois: $prontuario->only(['conteudo']),
         );
 
         $this->editando = false;

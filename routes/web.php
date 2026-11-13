@@ -14,6 +14,7 @@ use App\Models\FichaMedica;
 use App\Models\Paciente;
 use App\Models\ProntuarioDiario;
 use App\Models\ProntuarioHistorico;
+use App\Services\AuditoriaService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -107,6 +108,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         $ficha = FichaMedica::where('paciente_id', $paciente->id)->with('atualizadoPor')->first();
 
+        app(AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'exportacao.ficha_medica',
+            alvo: $paciente,
+            dadosDepois: ['formato' => 'pdf', 'prontuario' => $paciente->prontuario],
+        );
+
         $pdf = Pdf::loadView('pdf.ficha-medica', compact('paciente', 'ficha'))
             ->setPaper('a4');
 
@@ -129,6 +137,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->orderBy('data')
             ->get();
 
+        app(AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'exportacao.prontuario_diario',
+            alvo: $paciente,
+            dadosDepois: [
+                'formato' => 'pdf',
+                'prontuario' => $paciente->prontuario,
+                'inicio' => $inicio->toDateString(),
+                'fim' => $fim->toDateString(),
+            ],
+        );
+
         $pdf = Pdf::loadView('pdf.prontuario-diario', compact('paciente', 'prontuarios', 'inicio', 'fim'))
             ->setPaper('a4');
 
@@ -143,6 +163,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $prontuarios = ProntuarioDiario::where('paciente_id', $paciente->id)
             ->orderByDesc('data')
             ->get();
+
+        app(AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'exportacao.completo',
+            alvo: $paciente,
+            dadosDepois: ['formato' => 'pdf', 'prontuario' => $paciente->prontuario],
+        );
 
         $pdf = Pdf::loadView('pdf.completo', compact('paciente', 'ficha', 'historico', 'prontuarios'))
             ->setPaper('a4');

@@ -3,6 +3,11 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Services\AuditoriaService;
+use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -70,5 +75,40 @@ class AppServiceProvider extends ServiceProvider
         // Quem pode gerar um dump manual do banco inteiro (todos os dados de
         // todas as internas, nao um recorte por paciente como 'gerar-relatorios').
         Gate::define('gerenciar-backup', fn (User $user) => $user->temCargo('admin'));
+
+        $this->registrarAuditoriaDeAutenticacao();
+    }
+
+    /**
+     * Registra na trilha de auditoria os eventos de autenticacao (login, logout
+     * e falha de login). Exigencia de rastreabilidade LGPD: todo acesso (ou
+     * tentativa) ao sistema de dados sensiveis deve ficar registrado.
+     *
+     * Em falha de login nao ha usuario autenticado; gravamos apenas o e-mail
+     * tentado (nunca a senha) para permitir detectar ataques de forca bruta.
+     */
+    private function registrarAuditoriaDeAutenticacao(): void
+    {
+        Event::listen(function (Login $event) {
+            app(AuditoriaService::class)->registrar(
+                usuario: $event->user instanceof User ? $event->user : null,
+                acao: 'auth.login',
+            );
+        });
+
+        Event::listen(function (Logout $event) {
+            app(AuditoriaService::class)->registrar(
+                usuario: $event->user instanceof User ? $event->user : null,
+                acao: 'auth.logout',
+            );
+        });
+
+        Event::listen(function (Failed $event) {
+            app(AuditoriaService::class)->registrar(
+                usuario: null,
+                acao: 'auth.login_falhou',
+                dadosDepois: ['email' => $event->credentials['email'] ?? null],
+            );
+        });
     }
 }

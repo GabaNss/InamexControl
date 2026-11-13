@@ -3,6 +3,7 @@
 namespace App\Livewire\Usuarios;
 
 use App\Models\User;
+use App\Services\AuditoriaService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -76,13 +77,32 @@ class Form extends Component
             $dados['password'] = Hash::make($this->password);
         }
 
+        // Campos auditaveis — NUNCA inclui a senha (hash) na trilha de auditoria.
+        $campos = ['name', 'email', 'cargo', 'ativo', 'turno_inicio', 'turno_fim'];
+
         if ($this->user) {
             $this->authorize('update', $this->user);
+            $dadosAntes = $this->user->only($campos);
             $this->user->update($dados);
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'usuario.atualizado',
+                alvo: $this->user,
+                dadosAntes: $dadosAntes,
+                dadosDepois: $this->user->only($campos),
+            );
         } else {
             $this->authorize('create', User::class);
             $dados['must_change_password'] = true;
-            User::create($dados);
+            $novoUsuario = User::create($dados);
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'usuario.criado',
+                alvo: $novoUsuario,
+                dadosDepois: $novoUsuario->only($campos),
+            );
         }
 
         session()->flash('status', 'Usuario salvo com sucesso.');

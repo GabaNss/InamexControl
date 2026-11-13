@@ -3,6 +3,7 @@
 namespace App\Livewire\Medicamentos;
 
 use App\Models\Medicamento;
+use App\Services\AuditoriaService;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -44,12 +45,30 @@ class Form extends Component
             'ativo' => ['boolean'],
         ]);
 
+        $campos = ['nome', 'concentracao', 'via_administracao', 'ativo'];
+
         if ($this->medicamento) {
             $this->authorize('update', $this->medicamento);
+            $dadosAntes = $this->medicamento->only($campos);
             $this->medicamento->update($dados);
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'medicamento.atualizado',
+                alvo: $this->medicamento,
+                dadosAntes: $dadosAntes,
+                dadosDepois: $this->medicamento->only($campos),
+            );
         } else {
             $this->authorize('create', Medicamento::class);
-            Medicamento::create($dados);
+            $medicamento = Medicamento::create($dados);
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'medicamento.criado',
+                alvo: $medicamento,
+                dadosDepois: $medicamento->only($campos),
+            );
         }
 
         session()->flash('status', 'Medicamento salvo com sucesso.');

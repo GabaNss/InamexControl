@@ -37,6 +37,14 @@ class Index extends Component
 
         $prescricao->update(['ativa' => false]);
 
+        app(\App\Services\AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'prescricao.inativada',
+            alvo: $prescricao,
+            dadosAntes: ['ativa' => true],
+            dadosDepois: ['ativa' => false],
+        );
+
         session()->flash('status', 'Prescricao inativada.');
     }
 
