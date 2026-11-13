@@ -56,7 +56,9 @@ class Form extends Component
         unset($dados['foto']);
 
         if ($this->foto) {
-            $dados['foto'] = $this->foto->store('pacientes', 'public');
+            // Disco 'local' = storage/app/private, fora do webroot. A foto (dado
+            // pessoal sensivel) so e servida pela rota autenticada pacientes.foto.
+            $dados['foto'] = $this->foto->store('pacientes', 'local');
         }
 
         if ($this->paciente) {
@@ -64,7 +66,7 @@ class Form extends Component
             $fotoAntiga = $this->paciente->foto;
             $this->paciente->update($dados);
             if ($this->foto && $fotoAntiga) {
-                Storage::disk('public')->delete($fotoAntiga);
+                Storage::disk('local')->delete($fotoAntiga);
             }
         } else {
             $this->authorize('create', Paciente::class);

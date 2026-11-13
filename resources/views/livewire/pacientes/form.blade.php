@@ -32,7 +32,12 @@
                         <input id="foto" type="file" wire:model="foto" class="mt-1 block w-full text-sm" accept="image/*" />
                         <x-input-error :messages="$errors->get('foto')" class="mt-2" />
                         @if ($paciente?->foto)
-                            <p class="text-xs text-gray-500 mt-1">Foto atual sera substituida apenas se voce enviar uma nova.</p>
+                            <div class="mt-2 flex items-center gap-3">
+                                <img src="{{ route('pacientes.foto', $paciente) }}"
+                                    alt="Foto de {{ $paciente->nome }}"
+                                    class="w-16 h-16 rounded-full object-cover ring-1 ring-gray-200">
+                                <p class="text-xs text-gray-600">Foto atual sera substituida apenas se voce enviar uma nova.</p>
+                            </div>
                         @endif
                     </div>
 

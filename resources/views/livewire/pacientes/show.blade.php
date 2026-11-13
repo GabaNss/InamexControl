@@ -15,6 +15,13 @@
                 <div class="h-2 bg-gradient-to-r from-brand-600 to-accent-500"></div>
                 <div class="p-6 flex items-center gap-5">
 
+                    {{-- Foto da interna (servida pela rota autenticada; disco privado) --}}
+                    @if ($paciente->foto)
+                        <img src="{{ route('pacientes.foto', $paciente) }}"
+                            alt="Foto de {{ $paciente->nome }}"
+                            class="w-16 h-16 rounded-full object-cover shrink-0 ring-1 ring-gray-200">
+                    @endif
+
                     {{-- Dados --}}
                     <div class="flex-1 min-w-0">
                         <h1 class="text-lg font-semibold text-gray-900 truncate">{{ $paciente->nome }}</h1>

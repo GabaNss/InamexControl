@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 // Sistema fechado: sem landing page publica. Visitante vai para o login;
 // usuario autenticado vai direto para o dashboard.
@@ -58,6 +59,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pacientes', Pacientes\Index::class)->name('pacientes.index');
     Route::get('/pacientes/create', Pacientes\Form::class)->name('pacientes.create');
     Route::get('/pacientes/{paciente}/edit', Pacientes\Form::class)->name('pacientes.edit');
+
+    // Foto da interna: dado pessoal sensivel. Servida apenas aqui, atras de
+    // autenticacao + PacientePolicy@view, a partir do disco privado (storage/app/
+    // private). Nunca fica acessivel via /storage. Cache-Control private, no-store
+    // impede que proxies/navegadores retenham a imagem.
+    Route::get('/pacientes/{paciente}/foto', function (Paciente $paciente) {
+        Gate::authorize('view', $paciente);
+
+        abort_unless($paciente->foto && Storage::disk('local')->exists($paciente->foto), 404);
+
+        return Storage::disk('local')->response($paciente->foto, null, [
+            'Cache-Control' => 'private, no-store',
+        ]);
+    })->name('pacientes.foto');
+
     Route::get('/pacientes/{paciente}', Pacientes\Show::class)->name('pacientes.show');
 
     // Medicamentos: leitura para toda a equipe clinica; escrita restrita a
