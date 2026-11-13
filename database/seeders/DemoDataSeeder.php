@@ -24,6 +24,12 @@ class DemoDataSeeder extends Seeder
 {
     public function run(): void
     {
+        // Dados ficticios nunca devem ser inseridos em producao (ambiente com
+        // dados reais de pacientes). Aborta se o ambiente for de producao.
+        if (app()->isProduction()) {
+            throw new \RuntimeException('DemoDataSeeder nao pode rodar em producao.');
+        }
+
         $cargos = ['diretor', 'medico', 'medico', 'enfermeiro', 'enfermeiro', 'tecnico', 'tecnico', 'tecnico', 'pendente', 'admin'];
 
         $usuarios = collect($cargos)->map(fn (string $cargo, int $i) => User::factory()->create([

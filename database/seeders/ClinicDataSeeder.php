@@ -19,6 +19,11 @@ class ClinicDataSeeder extends Seeder
 {
     public function run(): void
     {
+        // Dados clinicos ficticios nunca devem ser inseridos em producao.
+        if (app()->isProduction()) {
+            throw new \RuntimeException('ClinicDataSeeder nao pode rodar em producao.');
+        }
+
         $medico     = 101; // Demo Medico 2
         $enfermeiro = 103; // Demo Enfermeiro 4
 
