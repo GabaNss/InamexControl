@@ -9,7 +9,7 @@
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             @if (session('status'))
-                <div class="bg-green-50 text-green-700 text-sm rounded-md p-4">{{ session('status') }}</div>
+                <div role="status" aria-live="polite" class="bg-green-50 text-green-700 text-sm rounded-md p-4">{{ session('status') }}</div>
             @endif
 
             @can('encerrar-diario-manual')
@@ -54,7 +54,7 @@
                             <div>
                                 <div class="font-medium text-gray-900 text-sm">{{ $status->data->format('d/m/Y') }}</div>
                                 @if ($status->encerrado && $status->encerrado_em)
-                                    <div class="text-xs text-gray-400 mt-0.5">Encerrado em {{ $status->encerrado_em->format('d/m/Y H:i') }}</div>
+                                    <div class="text-xs text-gray-600 mt-0.5">Encerrado em {{ $status->encerrado_em->format('d/m/Y H:i') }}</div>
                                 @endif
                             </div>
                             <span class="shrink-0 px-2 py-1 rounded-full text-xs font-medium {{ $status->encerrado ? 'bg-gray-200 text-gray-700' : 'bg-green-100 text-green-800' }}">
@@ -71,9 +71,9 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Encerrado em</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Encerrado em</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">

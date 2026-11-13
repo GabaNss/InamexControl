@@ -14,6 +14,11 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
+        {{-- Pular para o conteúdo: visível apenas ao navegar por teclado (acessibilidade). --}}
+        <a href="#conteudo"
+            class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:rounded-md focus:bg-brand-600 focus:text-white focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
+            Pular para o conteúdo
+        </a>
         <div class="min-h-screen bg-brand-50/40">
             @include('layouts.navigation')
 
@@ -27,7 +32,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main id="conteudo" tabindex="-1">
                 {{ $slot }}
             </main>
         </div>

@@ -17,6 +17,7 @@ $maxWidth = [
 <div
     x-data="{
         show: @js($show),
+        previouslyFocused: null,
         focusables() {
             // All focusable element types...
             let selector = 'a, button, input:not([type=\'hidden\']), textarea, select, details, [tabindex]:not([tabindex=\'-1\'])'
@@ -33,10 +34,13 @@ $maxWidth = [
     }"
     x-init="$watch('show', value => {
         if (value) {
+            // Guarda quem tinha o foco para devolve-lo ao fechar (acessibilidade).
+            previouslyFocused = document.activeElement;
             document.body.classList.add('overflow-y-hidden');
-            {{ $attributes->has('focusable') ? 'setTimeout(() => firstFocusable().focus(), 100)' : '' }}
+            setTimeout(() => (firstFocusable() || $el).focus(), 100);
         } else {
             document.body.classList.remove('overflow-y-hidden');
+            previouslyFocused?.focus();
         }
     })"
     x-on:open-modal.window="$event.detail == '{{ $name }}' ? show = true : null"
@@ -46,6 +50,9 @@ $maxWidth = [
     x-on:keydown.tab.prevent="$event.shiftKey || nextFocusable().focus()"
     x-on:keydown.shift.tab.prevent="prevFocusable().focus()"
     x-show="show"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
     class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
     style="display: {{ $show ? 'block' : 'none' }};"
 >

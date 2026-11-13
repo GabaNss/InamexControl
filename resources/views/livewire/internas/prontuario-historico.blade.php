@@ -1,6 +1,6 @@
 <div>
     @if (session('status-historico'))
-        <div class="mb-4 flex items-center gap-2 bg-green-50 text-green-700 text-sm rounded-lg px-4 py-3 border border-green-200">
+        <div role="status" aria-live="polite" class="mb-4 flex items-center gap-2 bg-green-50 text-green-700 text-sm rounded-lg px-4 py-3 border border-green-200">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
@@ -15,9 +15,9 @@
                     {{ $historico ? 'Editando Prontuário Histórico' : 'Novo Prontuário Histórico' }}
                 </h3>
                 <button type="button" wire:click="cancelar"
-                    class="text-sm text-gray-400 hover:text-gray-600 transition-colors">Cancelar</button>
+                    class="text-sm text-gray-600 hover:text-gray-600 transition-colors">Cancelar</button>
             </div>
-            <p class="text-xs text-gray-400 -mt-2">
+            <p class="text-xs text-gray-600 -mt-2">
                 Registro acumulado — inclui histórico clínico, evolução, internações anteriores e qualquer informação relevante de longo prazo.
             </p>
             <textarea
@@ -40,7 +40,7 @@
         <div class="flex items-start justify-between mb-5">
             <div>
                 <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Prontuário Histórico</h3>
-                <p class="text-xs text-gray-400 mt-0.5">Registro acumulado de longo prazo</p>
+                <p class="text-xs text-gray-600 mt-0.5">Registro acumulado de longo prazo</p>
             </div>
             <div class="flex items-center gap-3">
                 @if ($historico)
@@ -78,8 +78,8 @@
         </div>
 
         @if (!$conteudo)
-            <div class="text-center py-14 text-gray-400">
-                <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="text-center py-14 text-gray-600">
+                <svg class="w-12 h-12 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                 </svg>
                 <p class="text-sm font-medium">Prontuário histórico em branco</p>

@@ -1,6 +1,6 @@
 <div>
     @if (session('status-ficha'))
-        <div class="mb-4 flex items-center gap-2 bg-green-50 text-green-700 text-sm rounded-lg px-4 py-3 border border-green-200">
+        <div role="status" aria-live="polite" class="mb-4 flex items-center gap-2 bg-green-50 text-green-700 text-sm rounded-lg px-4 py-3 border border-green-200">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
@@ -14,13 +14,13 @@
                 <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">
                     {{ $ficha ? 'Editando Ficha Médica' : 'Nova Ficha Médica' }}
                 </h3>
-                <button type="button" wire:click="cancelar" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">Cancelar</button>
+                <button type="button" wire:click="cancelar" class="text-sm text-gray-600 hover:text-gray-600 transition-colors">Cancelar</button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                     <x-input-label value="Diagnósticos" />
-                    <p class="text-xs text-gray-400 mb-1">CID, hipóteses diagnósticas</p>
+                    <p class="text-xs text-gray-600 mb-1">CID, hipóteses diagnósticas</p>
                     <textarea wire:model.blur="diagnosticos" rows="5"
                         placeholder="Ex: F20.0 - Esquizofrenia paranoide..."
                         class="mt-0 block w-full rounded-lg border-gray-200 shadow-sm text-sm focus:border-brand-400 focus:ring-brand-400"></textarea>
@@ -28,7 +28,7 @@
                 </div>
                 <div>
                     <x-input-label value="Medicamentos Crônicos" />
-                    <p class="text-xs text-gray-400 mb-1">Uso contínuo (fora das prescrições diárias)</p>
+                    <p class="text-xs text-gray-600 mb-1">Uso contínuo (fora das prescrições diárias)</p>
                     <textarea wire:model.blur="medicamentosCronicos" rows="5"
                         placeholder="Ex: Risperidona 2mg..."
                         class="mt-0 block w-full rounded-lg border-gray-200 shadow-sm text-sm focus:border-brand-400 focus:ring-brand-400"></textarea>
@@ -38,7 +38,7 @@
 
             <div>
                 <x-input-label value="Laudos e Exames" />
-                <p class="text-xs text-gray-400 mb-1">Resultados de exames, laudos médicos, pareceres</p>
+                <p class="text-xs text-gray-600 mb-1">Resultados de exames, laudos médicos, pareceres</p>
                 <textarea wire:model.blur="laudos" rows="5"
                     placeholder="Ex: ECG 12/06 — ritmo sinusal..."
                     class="mt-0 block w-full rounded-lg border-gray-200 shadow-sm text-sm focus:border-brand-400 focus:ring-brand-400"></textarea>
@@ -92,8 +92,8 @@
         </div>
 
         @if (!$diagnosticos && !$medicamentosCronicos && !$laudos)
-            <div class="text-center py-14 text-gray-400">
-                <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="text-center py-14 text-gray-600">
+                <svg class="w-12 h-12 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
                 <p class="text-sm font-medium">Ficha médica em branco</p>

@@ -1,6 +1,6 @@
 <div>
     @if (session('status-diario'))
-        <div class="mb-4 flex items-center gap-2 bg-green-50 text-green-700 text-sm rounded-lg px-4 py-3 border border-green-200">
+        <div role="status" aria-live="polite" class="mb-4 flex items-center gap-2 bg-green-50 text-green-700 text-sm rounded-lg px-4 py-3 border border-green-200">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
@@ -23,7 +23,7 @@
                                 ? 'bg-brand-50 text-brand-700 border-brand-200 hover:bg-brand-100'
                                 : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300') }}"
                 >
-                    <span class="text-xs leading-none mb-0.5 {{ $selecionado ? 'text-brand-200' : 'text-gray-400' }}">
+                    <span class="text-xs leading-none mb-0.5 {{ $selecionado ? 'text-brand-200' : 'text-gray-600' }}">
                         {{ $dia['diaSemana'] }}
                     </span>
                     <span>{{ $dia['label'] }}</span>
@@ -104,7 +104,7 @@
                     <span wire:loading wire:target="salvar">Salvando...</span>
                 </x-primary-button>
                 <button type="button" wire:click="cancelar"
-                    class="text-sm text-gray-400 hover:text-gray-600 transition-colors">Cancelar</button>
+                    class="text-sm text-gray-600 hover:text-gray-600 transition-colors">Cancelar</button>
             </div>
         </div>
 
@@ -119,14 +119,14 @@
             <div class="px-5 py-4 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap min-h-36">
                 {{ $conteudo ?: '' }}
                 @if (!$conteudo)
-                    <span class="text-gray-400 italic">Nenhum registro para este dia.</span>
+                    <span class="text-gray-600 italic">Nenhum registro para este dia.</span>
                 @endif
             </div>
         </div>
 
         {{-- Rodapé: quem editou --}}
         @if ($ultimaEdicao?->atualizadoPor)
-            <p class="text-xs text-gray-400 mt-3">
+            <p class="text-xs text-gray-600 mt-3">
                 Editado por {{ $ultimaEdicao->atualizadoPor->name }}
                 em {{ $ultimaEdicao->updated_at->format('d/m/Y H:i') }}
             </p>
