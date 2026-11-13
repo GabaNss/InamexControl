@@ -81,6 +81,6 @@
     <p style="font-size: 9px; color: #888;">Última atualização por {{ $ficha->atualizadoPor->name }} em {{ $ficha->updated_at->format('d/m/Y H:i') }}</p>
     @endif
 
-    <div class="footer">Documento gerado pelo InamexControl</div>
+    <div class="footer" style="text-align: left;">Documento confidencial — contém dados pessoais sensíveis (LGPD). Gerado por {{ auth()->user()?->name ?? 'sistema' }} em {{ now()->format('d/m/Y H:i') }}.</div>
 </body>
 </html>

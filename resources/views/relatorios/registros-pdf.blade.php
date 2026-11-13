@@ -10,6 +10,7 @@
         table { width: 100%; border-collapse: collapse; margin-top: 16px; }
         th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; }
         th { background: #f3f4f6; }
+        .footer { margin-top: 24px; border-top: 1px solid #eee; padding-top: 8px; font-size: 9px; color: #777; }
     </style>
 </head>
 <body>
@@ -46,5 +47,7 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="footer">Documento confidencial — contém dados pessoais sensíveis (LGPD). Gerado por {{ auth()->user()?->name ?? 'sistema' }} em {{ now()->format('d/m/Y H:i') }}.</div>
 </body>
 </html>
