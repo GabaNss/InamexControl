@@ -9,10 +9,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             @if (session('status'))
-                <div class="bg-green-50 text-green-700 text-sm rounded-md p-4">{{ session('status') }}</div>
+                <div role="status" aria-live="polite" class="bg-green-50 text-green-700 text-sm rounded-md p-4">{{ session('status') }}</div>
             @endif
             @if (session('erro'))
-                <div class="bg-red-50 text-red-700 text-sm rounded-md p-4">{{ session('erro') }}</div>
+                <div role="alert" class="bg-red-50 text-red-700 text-sm rounded-md p-4">{{ session('erro') }}</div>
             @endif
 
             <div class="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6 flex flex-wrap items-end justify-between gap-4">
@@ -51,8 +51,9 @@
                                     </label>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-gray-600 mb-1">Observação</label>
+                                    <label for="obs-mobile-{{ $registro->id }}" class="block text-xs font-medium text-gray-600 mb-1">Observação</label>
                                     <input
+                                        id="obs-mobile-{{ $registro->id }}"
                                         type="text"
                                         class="block w-full rounded-md border-gray-300 text-sm shadow-sm"
                                         value="{{ $registro->observacao }}"
@@ -62,7 +63,7 @@
                                     >
                                 </div>
                                 @if ($registro->usuario)
-                                    <div class="text-xs text-gray-400">Responsável: {{ $registro->usuario->name }}</div>
+                                    <div class="text-xs text-gray-600">Responsável: {{ $registro->usuario->name }}</div>
                                 @endif
                             </div>
                         @empty
@@ -75,12 +76,12 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paciente</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Medicamento</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dose</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Administrado</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Observação</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Responsável</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paciente</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Medicamento</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dose</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Administrado</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Observação</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Responsável</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -101,6 +102,7 @@
                                         <td class="px-6 py-4 text-sm">
                                             <input
                                                 type="text"
+                                                aria-label="Observação da administração"
                                                 class="block w-48 rounded-md border-gray-300 text-sm shadow-sm"
                                                 value="{{ $registro->observacao }}"
                                                 {{ $diaAberto ? '' : 'disabled' }}

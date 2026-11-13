@@ -4,6 +4,7 @@ namespace App\Livewire\Internas;
 
 use App\Models\FichaMedica as ModelFichaMedica;
 use App\Models\Paciente;
+use App\Services\AuditoriaService;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -63,7 +64,10 @@ class FichaMedica extends Component
             $this->authorize('create', ModelFichaMedica::class);
         }
 
-        ModelFichaMedica::updateOrCreate(
+        $campos = ['laudos', 'diagnosticos', 'medicamentos_cronicos'];
+        $dadosAntes = $existente?->only($campos);
+
+        $ficha = ModelFichaMedica::updateOrCreate(
             ['paciente_id' => $this->pacienteId],
             [
                 'laudos' => $this->laudos ?: null,
@@ -71,6 +75,14 @@ class FichaMedica extends Component
                 'medicamentos_cronicos' => $this->medicamentosCronicos ?: null,
                 'atualizado_por' => auth()->id(),
             ],
+        );
+
+        app(AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: $existente ? 'ficha_medica.atualizada' : 'ficha_medica.criada',
+            alvo: $ficha,
+            dadosAntes: $dadosAntes,
+            dadosDepois: $ficha->only($campos),
         );
 
         $this->editando = false;
@@ -82,7 +94,15 @@ class FichaMedica extends Component
         $ficha = ModelFichaMedica::where('paciente_id', $this->pacienteId)->first();
         if ($ficha) {
             $this->authorize('delete', $ficha);
+            $dadosAntes = $ficha->only(['laudos', 'diagnosticos', 'medicamentos_cronicos']);
             $ficha->delete();
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'ficha_medica.excluida',
+                alvo: $ficha,
+                dadosAntes: $dadosAntes,
+            );
         }
         $this->carregarFicha();
         session()->flash('status-ficha', 'Ficha médica removida.');

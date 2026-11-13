@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
 
             @if (session('status'))
-                <div class="bg-green-50 text-green-700 text-sm rounded-md p-4">
+                <div role="status" aria-live="polite" class="bg-green-50 text-green-700 text-sm rounded-md p-4">
                     {{ session('status') }}
                 </div>
             @endif
@@ -89,11 +89,11 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nome</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prontuário</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quarto</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                <th class="px-6 py-3"></th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nome</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prontuário</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quarto</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th scope="col" class="px-6 py-3"></th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">

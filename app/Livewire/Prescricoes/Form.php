@@ -5,6 +5,7 @@ namespace App\Livewire\Prescricoes;
 use App\Models\Medicamento;
 use App\Models\Paciente;
 use App\Models\Prescricao;
+use App\Services\AuditoriaService;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -58,13 +59,31 @@ class Form extends Component
             'ativa' => ['boolean'],
         ]);
 
+        $campos = ['paciente_id', 'medicamento_id', 'dose', 'horario', 'ativa'];
+
         if ($this->prescricao) {
             $this->authorize('update', $this->prescricao);
+            $dadosAntes = $this->prescricao->only($campos);
             $this->prescricao->update($dados);
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'prescricao.atualizada',
+                alvo: $this->prescricao,
+                dadosAntes: $dadosAntes,
+                dadosDepois: $this->prescricao->only($campos),
+            );
         } else {
             $this->authorize('create', Prescricao::class);
             $dados['prescrito_por'] = auth()->id();
-            Prescricao::create($dados);
+            $prescricao = Prescricao::create($dados);
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'prescricao.criada',
+                alvo: $prescricao,
+                dadosDepois: $prescricao->only($campos),
+            );
         }
 
         session()->flash('status', 'Prescricao salva com sucesso.');

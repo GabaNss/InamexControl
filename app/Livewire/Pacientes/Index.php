@@ -31,7 +31,16 @@ class Index extends Component
     {
         $this->authorize('delete', $paciente);
 
+        $dadosAntes = $paciente->only(['nome', 'prontuario', 'quarto', 'ativa']);
+
         $paciente->delete();
+
+        app(\App\Services\AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'paciente.excluido',
+            alvo: $paciente,
+            dadosAntes: $dadosAntes,
+        );
 
         session()->flash('status', 'Paciente removido.');
     }

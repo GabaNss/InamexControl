@@ -1,24 +1,31 @@
 <x-guest-layout>
     <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+        Informe o e-mail de recuperação cadastrado no seu primeiro acesso.
+        Enviaremos um link para você redefinir sua senha.
     </div>
 
-    <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
 
-        <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-input-label for="recovery_email" value="E-mail de recuperação" />
+            <x-text-input
+                id="recovery_email"
+                class="block mt-1 w-full"
+                type="email"
+                name="recovery_email"
+                :value="old('recovery_email')"
+                required
+                autofocus
+            />
+            <x-input-error :messages="$errors->get('recovery_email')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end mt-4">
             <x-primary-button>
-                {{ __('Email Password Reset Link') }}
+                Enviar link de redefinição
             </x-primary-button>
         </div>
     </form>

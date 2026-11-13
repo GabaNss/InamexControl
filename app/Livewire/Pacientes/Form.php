@@ -3,6 +3,7 @@
 namespace App\Livewire\Pacientes;
 
 use App\Models\Paciente;
+use App\Services\AuditoriaService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -56,19 +57,39 @@ class Form extends Component
         unset($dados['foto']);
 
         if ($this->foto) {
-            $dados['foto'] = $this->foto->store('pacientes', 'public');
+            // Disco 'local' = storage/app/private, fora do webroot. A foto (dado
+            // pessoal sensivel) so e servida pela rota autenticada pacientes.foto.
+            $dados['foto'] = $this->foto->store('pacientes', 'local');
         }
+
+        $campos = ['nome', 'prontuario', 'quarto', 'ativa', 'foto'];
 
         if ($this->paciente) {
             $this->authorize('update', $this->paciente);
             $fotoAntiga = $this->paciente->foto;
+            $dadosAntes = $this->paciente->only($campos);
             $this->paciente->update($dados);
             if ($this->foto && $fotoAntiga) {
-                Storage::disk('public')->delete($fotoAntiga);
+                Storage::disk('local')->delete($fotoAntiga);
             }
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'paciente.atualizado',
+                alvo: $this->paciente,
+                dadosAntes: $dadosAntes,
+                dadosDepois: $this->paciente->only($campos),
+            );
         } else {
             $this->authorize('create', Paciente::class);
-            Paciente::create($dados);
+            $paciente = Paciente::create($dados);
+
+            app(AuditoriaService::class)->registrar(
+                usuario: auth()->user(),
+                acao: 'paciente.criado',
+                alvo: $paciente,
+                dadosDepois: $paciente->only($campos),
+            );
         }
 
         session()->flash('status', 'Paciente salvo com sucesso.');

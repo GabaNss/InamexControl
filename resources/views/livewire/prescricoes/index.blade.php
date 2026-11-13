@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
 
             @if (session('status'))
-                <div class="bg-green-50 text-green-700 text-sm rounded-md p-4">{{ session('status') }}</div>
+                <div role="status" aria-live="polite" class="bg-green-50 text-green-700 text-sm rounded-md p-4">{{ session('status') }}</div>
             @endif
 
             <div class="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6">
@@ -76,12 +76,12 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paciente</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Medicamento</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dose</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Horario</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                <th class="px-6 py-3"></th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paciente</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Medicamento</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dose</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Horario</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th scope="col" class="px-6 py-3"></th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">

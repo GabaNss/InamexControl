@@ -4,7 +4,7 @@
     <div class="bg-white rounded border border-gray-200">
         <div class="px-6 py-5 flex items-end justify-between gap-4">
             <div>
-                <p class="text-xs font-bold uppercase tracking-widest text-gray-400">
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-600">
                     {{ \Carbon\Carbon::today()->locale('pt_BR')->isoFormat('dddd[,] D [de] MMMM [de] YYYY') }}
                 </p>
                 <h1 class="text-3xl font-black text-gray-900 tracking-tight leading-none mt-1">
@@ -14,7 +14,7 @@
             <p class="shrink-0 text-sm font-bold uppercase tracking-wide pb-0.5
                 {{ $diaAberto
                     ? 'text-gray-900 border-b-2 border-green-500'
-                    : 'text-gray-400 border-b-2 border-gray-300' }}">
+                    : 'text-gray-600 border-b-2 border-gray-300' }}">
                 Diário {{ $diaAberto ? 'aberto' : 'encerrado' }}
             </p>
         </div>
@@ -26,57 +26,57 @@
 
             {{-- Internas --}}
             <div class="flex-1 p-5 border-b sm:border-b-0 sm:border-r border-gray-200">
-                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Internas ativas</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-600 mb-3">Internas ativas</p>
                 <p class="text-5xl font-black text-gray-900 tracking-tighter leading-none tabular-nums">
                     {{ $totalInternas }}
                 </p>
                 <div class="mt-3 h-px bg-gray-200">
                     <div class="h-full bg-gray-900" style="width: 100%"></div>
                 </div>
-                <p class="text-xs text-gray-400 mt-2">{{ $prescricoesAtivas }} prescrições ativas</p>
+                <p class="text-xs text-gray-600 mt-2">{{ $prescricoesAtivas }} prescrições ativas</p>
             </div>
 
             {{-- Doses hoje --}}
             <div class="flex-1 p-5 border-b sm:border-b-0 sm:border-r border-gray-200">
-                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Doses hoje</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-600 mb-3">Doses hoje</p>
                 <p class="text-5xl font-black text-gray-900 tracking-tighter leading-none tabular-nums">
-                    {{ $administradoHoje }}<span class="text-2xl font-normal text-gray-300">/{{ $totalHoje }}</span>
+                    {{ $administradoHoje }}<span class="text-2xl font-normal text-gray-600">/{{ $totalHoje }}</span>
                 </p>
                 <div class="mt-3 h-px bg-gray-200">
                     <div class="h-full bg-green-500 transition-all"
                         style="width: {{ $totalHoje > 0 ? round($administradoHoje / $totalHoje * 100) : 0 }}%"></div>
                 </div>
-                <p class="text-xs text-gray-400 mt-2">
+                <p class="text-xs text-gray-600 mt-2">
                     {{ $totalHoje > 0 ? round($administradoHoje / $totalHoje * 100) : 0 }}% administradas
                 </p>
             </div>
 
             {{-- Manhã --}}
             <div class="flex-1 p-5 border-b sm:border-b-0 sm:border-r border-gray-200">
-                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Manhã</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-600 mb-3">Manhã</p>
                 <p class="text-5xl font-black text-gray-900 tracking-tighter leading-none tabular-nums">
-                    {{ $admManha }}<span class="text-2xl font-normal text-gray-300">/{{ $totalManha }}</span>
+                    {{ $admManha }}<span class="text-2xl font-normal text-gray-600">/{{ $totalManha }}</span>
                 </p>
                 <div class="mt-3 h-px bg-gray-200">
                     <div class="h-full bg-amber-400 transition-all"
                         style="width: {{ $totalManha > 0 ? round($admManha / $totalManha * 100) : 0 }}%"></div>
                 </div>
-                <p class="text-xs text-gray-400 mt-2">
+                <p class="text-xs text-gray-600 mt-2">
                     {{ $totalManha > 0 ? round($admManha / $totalManha * 100) : 0 }}%
                 </p>
             </div>
 
             {{-- Tarde --}}
             <div class="flex-1 p-5">
-                <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Tarde</p>
+                <p class="text-xs font-bold uppercase tracking-widest text-gray-600 mb-3">Tarde</p>
                 <p class="text-5xl font-black text-gray-900 tracking-tighter leading-none tabular-nums">
-                    {{ $admTarde }}<span class="text-2xl font-normal text-gray-300">/{{ $totalTarde }}</span>
+                    {{ $admTarde }}<span class="text-2xl font-normal text-gray-600">/{{ $totalTarde }}</span>
                 </p>
                 <div class="mt-3 h-px bg-gray-200">
                     <div class="h-full bg-gray-700 transition-all"
                         style="width: {{ $totalTarde > 0 ? round($admTarde / $totalTarde * 100) : 0 }}%"></div>
                 </div>
-                <p class="text-xs text-gray-400 mt-2">
+                <p class="text-xs text-gray-600 mt-2">
                     {{ $totalTarde > 0 ? round($admTarde / $totalTarde * 100) : 0 }}%
                 </p>
             </div>
@@ -165,13 +165,13 @@
             <div class="flex items-baseline justify-between px-5 py-3 border-b border-gray-200">
                 <p class="text-xs font-bold uppercase tracking-widest text-gray-500">Internas ativas</p>
                 <a href="{{ route('pacientes.index') }}" wire:navigate
-                    class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors">
+                    class="text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-gray-900 transition-colors">
                     Ver todas →
                 </a>
             </div>
 
             @if ($internasAtivas->isEmpty())
-                <div class="px-5 py-14 text-center text-gray-400 text-sm">Nenhuma interna ativa.</div>
+                <div class="px-5 py-14 text-center text-gray-600 text-sm">Nenhuma interna ativa.</div>
             @else
                 <div class="divide-y divide-gray-100">
                     @foreach ($internasAtivas as $interna)
@@ -190,7 +190,7 @@
                                     {{ $interna->nome }}
                                 </p>
                                 @if ($interna->quarto)
-                                    <p class="text-xs text-gray-400 mt-0.5">Quarto {{ $interna->quarto }}</p>
+                                    <p class="text-xs text-gray-600 mt-0.5">Quarto {{ $interna->quarto }}</p>
                                 @endif
                             </div>
 
@@ -221,7 +221,7 @@
                                         {{ $admRegs }}/{{ $totalRegs }}
                                     </span>
                                 @else
-                                    <span class="text-xs font-bold px-1.5 py-0.5 border border-gray-200 text-gray-400 rounded-sm">
+                                    <span class="text-xs font-bold px-1.5 py-0.5 border border-gray-200 text-gray-600 rounded-sm">
                                         —
                                     </span>
                                 @endif
@@ -242,7 +242,7 @@
             @if ($dosesRecentes->isEmpty())
                 <div class="flex-1 flex flex-col items-center justify-center py-14 text-center px-5">
                     <p class="text-sm font-semibold text-gray-500">Sem doses registradas</p>
-                    <p class="text-xs text-gray-400 mt-1">As administrações aparecerão aqui.</p>
+                    <p class="text-xs text-gray-600 mt-1">As administrações aparecerão aqui.</p>
                 </div>
             @else
                 <div class="flex-1 divide-y divide-gray-100 overflow-y-auto">
@@ -254,7 +254,7 @@
                             <p class="text-xs text-gray-500 mt-0.5 truncate">
                                 {{ $reg->prescricao->medicamento->nome ?? '—' }} · {{ $reg->prescricao->dose }}
                             </p>
-                            <p class="text-xs font-bold uppercase tracking-wide text-gray-400 mt-1">
+                            <p class="text-xs font-bold uppercase tracking-wide text-gray-600 mt-1">
                                 {{ ucfirst($reg->turno) }}@if ($reg->usuario) · {{ $reg->usuario->name }}@endif
                             </p>
                         </div>

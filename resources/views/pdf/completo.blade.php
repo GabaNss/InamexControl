@@ -113,6 +113,6 @@
         <p class="empty">Nenhum prontuário diário registrado.</p>
     @endforelse
 
-    <div class="footer">Documento gerado pelo InamexControl</div>
+    <div class="footer" style="text-align: left;">Documento confidencial — contém dados pessoais sensíveis (LGPD). Gerado por {{ auth()->user()?->name ?? 'sistema' }} em {{ now()->format('d/m/Y H:i') }}.</div>
 </body>
 </html>

@@ -25,6 +25,9 @@ class User extends Authenticatable
         'ativo',
         'turno_inicio',
         'turno_fim',
+        'recovery_email',
+        'must_change_password',
+        'termos_aceitos_em',
     ];
 
     /**
@@ -134,11 +137,23 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    // Redireciona notificações de reset de senha para o recovery_email (separado do e-mail de login).
+    public function routeNotificationForMail($notification = null): string
+    {
+        if ($notification instanceof \Illuminate\Auth\Notifications\ResetPassword && $this->recovery_email) {
+            return $this->recovery_email;
+        }
+
+        return $this->email;
+    }
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'must_change_password' => 'boolean',
+            'termos_aceitos_em' => 'datetime',
         ];
     }
 }

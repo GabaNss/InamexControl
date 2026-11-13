@@ -14,11 +14,13 @@ use App\Models\FichaMedica;
 use App\Models\Paciente;
 use App\Models\ProntuarioDiario;
 use App\Models\ProntuarioHistorico;
+use App\Services\AuditoriaService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 // Sistema fechado: sem landing page publica. Visitante vai para o login;
 // usuario autenticado vai direto para o dashboard.
@@ -30,11 +32,29 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Primeiro acesso: definir senha e e-mail de recuperação (obrigatório antes de qualquer outra rota).
+Route::get('/primeiro-acesso', \App\Livewire\PrimeiroAcesso::class)
+    ->middleware('auth')
+    ->name('primeiro-acesso');
+
+// Documentos legais públicos (LGPD): acessíveis sem login, linkados no rodapé.
+Route::view('/privacidade', 'legal.privacidade')->name('privacidade');
+Route::view('/termos', 'legal.termos')->name('termos');
+
+// Aceite do termo de uso/confidencialidade (obrigatório no primeiro acesso ou
+// quando a versão do termo muda — ver App\Http\Middleware\AceiteTermos).
+Route::middleware('auth')->group(function () {
+    Route::get('/termos/aceite', [\App\Http\Controllers\AceiteTermosController::class, 'show'])->name('termos.aceite');
+    Route::post('/termos/aceite', [\App\Http\Controllers\AceiteTermosController::class, 'aceitar'])->name('termos.aceitar');
+});
+
 // Perfil do proprio usuario autenticado (Breeze) — qualquer cargo logado.
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Sem auto-exclusao de conta: num sistema clinico as contas sao apenas
+    // desativadas (campo 'ativo') pelo admin, para preservar a trilha de
+    // auditoria exigida pela LGPD. Ver App\Livewire\Usuarios\Index::desativar().
 });
 
 /*
@@ -53,6 +73,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pacientes', Pacientes\Index::class)->name('pacientes.index');
     Route::get('/pacientes/create', Pacientes\Form::class)->name('pacientes.create');
     Route::get('/pacientes/{paciente}/edit', Pacientes\Form::class)->name('pacientes.edit');
+
+    // Foto da interna: dado pessoal sensivel. Servida apenas aqui, atras de
+    // autenticacao + PacientePolicy@view, a partir do disco privado (storage/app/
+    // private). Nunca fica acessivel via /storage. Cache-Control private, no-store
+    // impede que proxies/navegadores retenham a imagem.
+    Route::get('/pacientes/{paciente}/foto', function (Paciente $paciente) {
+        Gate::authorize('view', $paciente);
+
+        abort_unless($paciente->foto && Storage::disk('local')->exists($paciente->foto), 404);
+
+        return Storage::disk('local')->response($paciente->foto, null, [
+            'Cache-Control' => 'private, no-store',
+        ]);
+    })->name('pacientes.foto');
+
     Route::get('/pacientes/{paciente}', Pacientes\Show::class)->name('pacientes.show');
 
     // Medicamentos: leitura para toda a equipe clinica; escrita restrita a
@@ -86,6 +121,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         $ficha = FichaMedica::where('paciente_id', $paciente->id)->with('atualizadoPor')->first();
 
+        app(AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'exportacao.ficha_medica',
+            alvo: $paciente,
+            dadosDepois: ['formato' => 'pdf', 'prontuario' => $paciente->prontuario],
+        );
+
         $pdf = Pdf::loadView('pdf.ficha-medica', compact('paciente', 'ficha'))
             ->setPaper('a4');
 
@@ -108,6 +150,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->orderBy('data')
             ->get();
 
+        app(AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'exportacao.prontuario_diario',
+            alvo: $paciente,
+            dadosDepois: [
+                'formato' => 'pdf',
+                'prontuario' => $paciente->prontuario,
+                'inicio' => $inicio->toDateString(),
+                'fim' => $fim->toDateString(),
+            ],
+        );
+
         $pdf = Pdf::loadView('pdf.prontuario-diario', compact('paciente', 'prontuarios', 'inicio', 'fim'))
             ->setPaper('a4');
 
@@ -122,6 +176,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $prontuarios = ProntuarioDiario::where('paciente_id', $paciente->id)
             ->orderByDesc('data')
             ->get();
+
+        app(AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'exportacao.completo',
+            alvo: $paciente,
+            dadosDepois: ['formato' => 'pdf', 'prontuario' => $paciente->prontuario],
+        );
 
         $pdf = Pdf::loadView('pdf.completo', compact('paciente', 'ficha', 'historico', 'prontuarios'))
             ->setPaper('a4');

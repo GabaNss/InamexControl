@@ -62,7 +62,7 @@
                                     <div><span class="font-medium text-gray-600">Alvo:</span> {{ class_basename($log->alvo_type) }} #{{ $log->alvo_id }}</div>
                                 @endif
                                 @if ($log->ip_address)
-                                    <div><span class="font-medium text-gray-600">IP:</span> <span class="text-gray-400 text-xs">{{ $log->ip_address }}</span></div>
+                                    <div><span class="font-medium text-gray-600">IP:</span> <span class="text-gray-600 text-xs">{{ $log->ip_address }}</span></div>
                                 @endif
                             </div>
                             @if ($log->dados_antes || $log->dados_depois)
@@ -80,7 +80,7 @@
                             @endif
                         </div>
                     @empty
-                        <div class="p-8 text-center text-gray-400 text-sm">Nenhum registro encontrado.</div>
+                        <div class="p-8 text-center text-gray-600 text-sm">Nenhum registro encontrado.</div>
                     @endforelse
                 </div>
 
@@ -89,12 +89,12 @@
                     <table class="min-w-full divide-y divide-gray-200 text-sm">
                         <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
                             <tr>
-                                <th class="px-4 py-3 text-left">Data / Hora</th>
-                                <th class="px-4 py-3 text-left">Usuário</th>
-                                <th class="px-4 py-3 text-left">Ação</th>
-                                <th class="px-4 py-3 text-left">Alvo</th>
-                                <th class="px-4 py-3 text-left">IP</th>
-                                <th class="px-4 py-3 text-left">Antes / Depois</th>
+                                <th scope="col" class="px-4 py-3 text-left">Data / Hora</th>
+                                <th scope="col" class="px-4 py-3 text-left">Usuário</th>
+                                <th scope="col" class="px-4 py-3 text-left">Ação</th>
+                                <th scope="col" class="px-4 py-3 text-left">Alvo</th>
+                                <th scope="col" class="px-4 py-3 text-left">IP</th>
+                                <th scope="col" class="px-4 py-3 text-left">Antes / Depois</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
@@ -118,7 +118,7 @@
                                             —
                                         @endif
                                     </td>
-                                    <td class="px-4 py-3 text-gray-400 text-xs whitespace-nowrap">
+                                    <td class="px-4 py-3 text-gray-600 text-xs whitespace-nowrap">
                                         {{ $log->ip_address ?? '—' }}
                                     </td>
                                     <td class="px-4 py-3 text-xs text-gray-500 max-w-xs">
@@ -141,7 +141,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-4 py-8 text-center text-gray-400">Nenhum registro encontrado.</td>
+                                    <td colspan="6" class="px-4 py-8 text-center text-gray-600">Nenhum registro encontrado.</td>
                                 </tr>
                             @endforelse
                         </tbody>

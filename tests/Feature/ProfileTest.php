@@ -21,7 +21,7 @@ class ProfileTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_profile_information_can_be_updated(): void
+    public function test_profile_name_can_be_updated(): void
     {
         $user = User::factory()->create();
 
@@ -29,7 +29,6 @@ class ProfileTest extends TestCase
             ->actingAs($user)
             ->patch('/profile', [
                 'name' => 'Test User',
-                'email' => 'test@example.com',
             ]);
 
         $response
@@ -39,60 +38,37 @@ class ProfileTest extends TestCase
         $user->refresh();
 
         $this->assertSame('Test User', $user->name);
-        $this->assertSame('test@example.com', $user->email);
-        $this->assertNull($user->email_verified_at);
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
+    public function test_login_email_cannot_be_changed_via_profile(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['email' => 'original@inamex.com']);
 
-        $response = $this
+        $this
             ->actingAs($user)
             ->patch('/profile', [
                 'name' => 'Test User',
-                'email' => $user->email,
-            ]);
-
-        $response
+                'email' => 'hacker@evil.com',
+            ])
             ->assertSessionHasNoErrors()
             ->assertRedirect('/profile');
 
-        $this->assertNotNull($user->refresh()->email_verified_at);
+        // O e-mail de login permanece inalterado, mesmo tendo sido enviado no POST.
+        $this->assertSame('original@inamex.com', $user->refresh()->email);
     }
 
-    public function test_user_can_delete_their_account(): void
+    public function test_account_self_deletion_route_does_not_exist(): void
     {
-        $user = User::factory()->create();
+        // Sistema clinico: o usuario nao pode excluir a propria conta. Contas sao
+        // apenas desativadas pelo admin, preservando a trilha de auditoria (LGPD).
+        $this->assertFalse(\Illuminate\Support\Facades\Route::has('profile.destroy'));
 
-        $response = $this
+        $user = User::factory()->create(['ativo' => true]);
+
+        $this
             ->actingAs($user)
-            ->delete('/profile', [
-                'password' => 'password',
-            ]);
-
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/');
-
-        $this->assertGuest();
-        $this->assertNull($user->fresh());
-    }
-
-    public function test_correct_password_must_be_provided_to_delete_account(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this
-            ->actingAs($user)
-            ->from('/profile')
-            ->delete('/profile', [
-                'password' => 'wrong-password',
-            ]);
-
-        $response
-            ->assertSessionHasErrorsIn('userDeletion', 'password')
-            ->assertRedirect('/profile');
+            ->delete('/profile', ['password' => 'password'])
+            ->assertStatus(405); // Method Not Allowed: so GET e PATCH existem em /profile
 
         $this->assertNotNull($user->fresh());
     }

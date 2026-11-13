@@ -11,6 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // SegurancaHeaders primeiro para envolver os demais: assim seus cabecalhos
+        // (e o no-store) tambem se aplicam quando PrimeiroAcesso/AceiteTermos
+        // interrompem a requisicao com um redirect.
+        $middleware->appendToGroup('web', \App\Http\Middleware\SegurancaHeaders::class);
+        $middleware->appendToGroup('web', \App\Http\Middleware\PrimeiroAcesso::class);
+        // Aceite do termo de uso/confidencialidade antes de usar o sistema (LGPD).
+        $middleware->appendToGroup('web', \App\Http\Middleware\AceiteTermos::class);
         // Confia no(s) proxy(s)/load balancer da hospedagem para que o Laravel
         // reconheca corretamente o esquema (https) e o IP original do cliente
         // a partir dos headers X-Forwarded-* — essencial para

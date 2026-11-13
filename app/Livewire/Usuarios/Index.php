@@ -29,6 +29,14 @@ class Index extends Component
 
         $user->update(['ativo' => false]);
 
+        app(\App\Services\AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'usuario.desativado',
+            alvo: $user,
+            dadosAntes: ['ativo' => true],
+            dadosDepois: ['ativo' => false],
+        );
+
         session()->flash('status', 'Usuario desativado.');
     }
 
@@ -37,6 +45,14 @@ class Index extends Component
         $this->authorize('update', $user);
 
         $user->update(['ativo' => true]);
+
+        app(\App\Services\AuditoriaService::class)->registrar(
+            usuario: auth()->user(),
+            acao: 'usuario.reativado',
+            alvo: $user,
+            dadosAntes: ['ativo' => false],
+            dadosDepois: ['ativo' => true],
+        );
 
         session()->flash('status', 'Usuario reativado.');
     }
