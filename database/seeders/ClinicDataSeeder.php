@@ -6,6 +6,7 @@ use App\Models\FichaMedica;
 use App\Models\Paciente;
 use App\Models\ProntuarioDiario;
 use App\Models\ProntuarioHistorico;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -24,8 +25,14 @@ class ClinicDataSeeder extends Seeder
             throw new \RuntimeException('ClinicDataSeeder nao pode rodar em producao.');
         }
 
-        $medico     = 101; // Demo Medico 2
-        $enfermeiro = 103; // Demo Enfermeiro 4
+        // Busca usuarios reais por cargo em vez de assumir IDs fixos (o offset de
+        // IDs varia conforme o banco). Garante integridade referencial no seed.
+        $medico     = User::where('cargo', 'medico')->value('id');
+        $enfermeiro = User::where('cargo', 'enfermeiro')->value('id') ?? $medico;
+
+        if (! $medico) {
+            throw new \RuntimeException('ClinicDataSeeder requer o DemoDataSeeder antes (nenhum medico encontrado).');
+        }
 
         $pacientes = Paciente::all();
 
