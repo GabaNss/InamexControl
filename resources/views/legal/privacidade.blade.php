@@ -59,8 +59,8 @@
     <p>Para exercer seus direitos ou esclarecer dúvidas sobre o tratamento de dados, contate o
         Encarregado pelo Tratamento de Dados Pessoais:</p>
     <ul>
-        <li><strong>Encarregado:</strong> [NOME DO ENCARREGADO]</li>
-        <li><strong>E-mail:</strong> [E-MAIL]</li>
+        <li><strong>Encarregado:</strong> Gabriel Nossa Theodoro</li>
+        <li><strong>E-mail:</strong> <a href="mailto:gabrielnossatheodoro@gmail.com">gabrielnossatheodoro@gmail.com</a></li>
     </ul>
 
 </x-legal-layout>
